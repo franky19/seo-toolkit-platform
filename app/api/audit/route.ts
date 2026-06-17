@@ -58,8 +58,14 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const { $, url: finalUrl } = crawlResult;
+    const { $, url: finalUrl, statusCode } = crawlResult;
 
+    if (statusCode >= 400) {
+      return NextResponse.json(
+        { error: `Target responded with HTTP ${statusCode}` },
+        { status: 400 }
+      );
+    }
     // Perform audits
     const seoAudit = SEOAnalyzer.analyzeSEO($, finalUrl);
     const googleNewsAudit = SEOAnalyzer.analyzeGoogleNews($);
