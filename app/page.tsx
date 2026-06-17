@@ -60,8 +60,9 @@ export default function Home() {
       
       // Increment rate limit count after successful audit
       RateLimiter.incrementCount();
-    } catch (err: any) {
-      setError(err.message || "An error occurred during the audit");
+    } catch (err: unknown) {
+      const errorMessage = err instanceof Error ? err.message : "An error occurred during the audit";
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -141,7 +142,7 @@ export default function Home() {
                 </motion.div>
               )}
               <div className="mt-4 text-sm text-gray-400 text-center">
-                Free tier: {5 - (RateLimiter.checkLimit().remaining)} / 5 audits used today
+                Free tier: {Math.max(0, 5 - RateLimiter.checkLimit().remaining)} / 5 audits used today
               </div>
             </CardContent>
           </Card>

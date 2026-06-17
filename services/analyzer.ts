@@ -149,6 +149,7 @@ export class SEOAnalyzer {
 
     if (!canonical) {
       canonicalIssues.push('Missing canonical URL');
+      issues.push('Missing canonical URL');
     }
 
     const status: AuditStatus = issues.length === 0 ? 'PASS' : noindex ? 'ERROR' : 'WARNING';

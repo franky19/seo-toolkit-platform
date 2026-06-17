@@ -11,8 +11,45 @@ export interface CrawlResult {
 export class WebCrawler {
   private static readonly USER_AGENT = 'Mozilla/5.0 (compatible; SEOToolkit/1.0; +https://seotoolkit.com/bot)';
   private static readonly TIMEOUT = 10000; // 10 seconds
+  private static readonly ALLOWED_PROTOCOLS = ['http:', 'https:'];
+
+  private static validateUrl(url: string): void {
+    try {
+      const urlObj = new URL(url);
+      
+      // Only allow http and https protocols
+      if (!this.ALLOWED_PROTOCOLS.includes(urlObj.protocol)) {
+        throw new Error(`Invalid protocol: ${urlObj.protocol}. Only HTTP and HTTPS are allowed.`);
+      }
+
+      // Prevent access to localhost and private IP ranges
+      const hostname = urlObj.hostname.toLowerCase();
+      if (
+        hostname === 'localhost' ||
+        hostname === '127.0.0.1' ||
+        hostname === '0.0.0.0' ||
+        hostname.match(/^10\./) ||
+        hostname.match(/^172\.(1[6-9]|2[0-9]|3[0-1])\./) ||
+        hostname.match(/^192\.168\./) ||
+        hostname.match(/^169\.254\./) ||
+        hostname.match(/^::1$/) ||
+        hostname.match(/^fc00:/) ||
+        hostname.match(/^fe80:/)
+      ) {
+        throw new Error('Access to private/local networks is not allowed');
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        throw error;
+      }
+      throw new Error('Invalid URL format');
+    }
+  }
 
   static async crawl(url: string): Promise<CrawlResult> {
+    // Validate URL before making request
+    this.validateUrl(url);
+
     try {
       const response = await axios.get(url, {
         headers: {
@@ -34,12 +71,18 @@ export class WebCrawler {
         url: response.request.res.responseUrl || url,
         statusCode: response.status,
       };
-    } catch (error: any) {
-      throw new Error(`Failed to crawl ${url}: ${error.message}`);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        throw new Error(`Failed to crawl ${url}: ${error.message}`);
+      }
+      throw new Error(`Failed to crawl ${url}: Unknown error`);
     }
   }
 
   static async fetchXML(url: string): Promise<string> {
+    // Validate URL before making request
+    this.validateUrl(url);
+
     try {
       const response = await axios.get(url, {
         headers: {
@@ -51,12 +94,22 @@ export class WebCrawler {
       });
 
       return response.data;
-    } catch (error: any) {
-      throw new Error(`Failed to fetch XML from ${url}: ${error.message}`);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        throw new Error(`Failed to fetch XML from ${url}: ${error.message}`);
+      }
+      throw new Error(`Failed to fetch XML from ${url}: Unknown error`);
     }
   }
 
   static async checkResource(url: string): Promise<boolean> {
+    // Validate URL before making request
+    try {
+      this.validateUrl(url);
+    } catch {
+      return false;
+    }
+
     try {
       const response = await axios.head(url, {
         headers: {

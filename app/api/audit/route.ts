@@ -35,9 +35,10 @@ export async function POST(request: NextRequest) {
     let crawlResult;
     try {
       crawlResult = await WebCrawler.crawl(normalizedUrl);
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : 'Failed to crawl website';
       return NextResponse.json(
-        { error: `Failed to crawl website: ${error.message}` },
+        { error: `Failed to crawl website: ${errorMessage}` },
         { status: 500 }
       );
     }
@@ -114,10 +115,11 @@ export async function POST(request: NextRequest) {
     };
 
     return NextResponse.json(auditReport);
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Audit error:', error);
+    const errorMessage = error instanceof Error ? error.message : 'Internal server error';
     return NextResponse.json(
-      { error: 'Internal server error', details: error.message },
+      { error: 'Internal server error', details: errorMessage },
       { status: 500 }
     );
   }
