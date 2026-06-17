@@ -1,0 +1,28 @@
+# Google News SEO Toolkit - AI Agent Instructions
+
+## Purpose
+This tool helps website owners validate their SEO, Google News readiness, and AI search optimization.
+
+## Key Features
+- Technical SEO audit
+- Google News validation
+- Schema markup validation
+- Sitemap discovery
+- AI search readiness check
+
+## Usage
+- Free tool with 5 audits per day
+- No registration required
+- Instant results
+
+## Target Audience
+- News publishers
+- Content marketers
+- SEO professionals
+- Web developers
+
+## Technology
+Built with Next.js, TypeScript, and modern web standards.
+
+## Contact
+Visit the website for more information.

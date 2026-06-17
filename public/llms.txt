@@ -1,0 +1,60 @@
+# Google News SEO Toolkit
+
+> Product Description
+
+Google News SEO Toolkit is a comprehensive SEO audit tool designed for validating website SEO, Google News readiness, schema validation, and AI search optimization. Our tool helps content publishers, news organizations, and website owners ensure their content is properly structured for maximum visibility in Google News and AI-powered search engines.
+
+## Features
+
+- Technical SEO Audit: Comprehensive analysis of meta tags, indexability, canonical URLs, and social media optimization
+- Google News Validation: Verify NewsArticle schema, author attribution, publication dates, and featured images
+- Schema Validation: Detect and validate JSON-LD structured data including Organization, Article, Website, Breadcrumb, and FAQ schemas
+- XML Sitemap Discovery: Automatically find and validate XML sitemaps and news-specific sitemaps
+- AI Search Readiness: Check compatibility with ChatGPT, Google Gemini, Perplexity, and Claude
+- Recommendation Engine: Receive prioritized, actionable recommendations to improve your SEO performance
+- Real-time Analysis: Get instant feedback on your website's SEO health
+- Free Tier: 5 free audits per day with no registration required
+
+## How It Works
+
+1. Enter your website URL
+2. Our tool crawls and analyzes your page
+3. Receive a comprehensive audit report with scores
+4. Review detailed findings and recommendations
+5. Implement suggested improvements
+
+## Use Cases
+
+- News publishers preparing for Google News inclusion
+- Content marketers optimizing for AI search engines
+- SEO professionals conducting technical audits
+- Web developers ensuring proper schema implementation
+- Digital agencies providing SEO services
+
+## Technical Details
+
+Built with Next.js, TypeScript, and modern web technologies. Analyzes meta tags, structured data, sitemaps, and validates against Google News and schema.org specifications.
+
+## FAQ
+
+**Q: How many audits can I perform?**
+A: Free users can perform 5 audits per day. The limit resets every 24 hours.
+
+**Q: Do I need to create an account?**
+A: No, the tool is completely free to use without registration.
+
+**Q: What does the tool check?**
+A: We analyze technical SEO elements, Google News compliance, schema markup, sitemaps, and AI search readiness.
+
+**Q: How accurate are the recommendations?**
+A: Our recommendations are based on official Google guidelines and schema.org specifications.
+
+**Q: Can I audit any website?**
+A: Yes, you can audit any publicly accessible website.
+
+**Q: How long does an audit take?**
+A: Most audits complete in less than 10 seconds.
+
+## Documentation
+
+For more information, visit our website or contact support.
