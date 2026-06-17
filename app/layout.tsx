@@ -4,21 +4,56 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 
+const siteUrl = "https://seo-toolkit-platform.vercel.app";
+
 export const metadata: Metadata = {
-  title: "Google News SEO Toolkit - Free SEO Audit & Schema Validator",
-  description: "Comprehensive SEO audit tool for Google News optimization, schema validation, sitemap checker, and AI search readiness. Free technical SEO checker for your website.",
-  keywords: ["seo checker", "seo audit tool", "seo validator", "technical seo checker", "schema validator", "schema checker", "google news validator", "google news checker", "news sitemap validator", "news sitemap generator", "structured data validator", "json ld validator"],
-  authors: [{ name: "Google News SEO Toolkit" }],
+  metadataBase: new URL(siteUrl),
+  title: {
+    default: "Google News SEO Toolkit – Optimize Articles for Google News & AI Search",
+    template: "%s | Google News SEO Toolkit",
+  },
+  description:
+    "Instantly analyze any article for Google News eligibility, NewsArticle schema, Discover readiness, and AI citation potential (ChatGPT, Gemini, Perplexity). Free, no signup.",
+  keywords: [
+    "google news seo",
+    "google news validator",
+    "news article schema",
+    "newsarticle schema generator",
+    "google news checker",
+    "google discover optimization",
+    "ai citation checker",
+    "chatgpt seo",
+    "news seo checker",
+    "news sitemap validator",
+    "publisher seo",
+    "google news requirements",
+  ],
+  authors: [{ name: "Google News SEO Toolkit", url: siteUrl }],
+  creator: "Google News SEO Toolkit",
+  publisher: "Google News SEO Toolkit",
   openGraph: {
-    title: "Google News SEO Toolkit - Free SEO Audit & Schema Validator",
-    description: "Comprehensive SEO audit tool for Google News optimization, schema validation, sitemap checker, and AI search readiness.",
+    title: "Google News SEO Toolkit – Optimize Articles for Google News & AI Search",
+    description:
+      "Instantly analyze any article for Google News eligibility, NewsArticle schema, Discover readiness, and AI citation potential. Free analysis tool.",
     type: "website",
     locale: "en_US",
+    url: siteUrl,
+    siteName: "Google News SEO Toolkit",
+    images: [
+      {
+        url: `${siteUrl}/og-image.png`,
+        width: 1200,
+        height: 630,
+        alt: "Google News SEO Toolkit",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Google News SEO Toolkit - Free SEO Audit & Schema Validator",
-    description: "Comprehensive SEO audit tool for Google News optimization, schema validation, sitemap checker, and AI search readiness.",
+    title: "Google News SEO Toolkit – Optimize Articles for Google News & AI Search",
+    description:
+      "Instantly analyze any article for Google News eligibility, NewsArticle schema, Discover readiness, and AI citation potential.",
+    images: [`${siteUrl}/og-image.png`],
   },
   robots: {
     index: true,
@@ -26,8 +61,15 @@ export const metadata: Metadata = {
     googleBot: {
       index: true,
       follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
     },
   },
+  alternates: {
+    canonical: siteUrl,
+  },
+  category: "technology",
 };
 
 export default function RootLayout({
@@ -36,12 +78,39 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body className="font-sans antialiased">
+    <html lang="en" className="dark" suppressHydrationWarning>
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "SoftwareApplication",
+              name: "Google News SEO Toolkit",
+              url: siteUrl,
+              description:
+                "Free tool to analyze articles for Google News eligibility, schema validation, Discover readiness, and AI citation potential.",
+              applicationCategory: "WebApplication",
+              operatingSystem: "Web",
+              offers: {
+                "@type": "Offer",
+                price: "0",
+                priceCurrency: "USD",
+              },
+              publisher: {
+                "@type": "Organization",
+                name: "Google News SEO Toolkit",
+                url: siteUrl,
+              },
+            }),
+          }}
+        />
+      </head>
+      <body className="font-sans antialiased bg-[#0a0a0a] text-white">
         <ThemeProvider
           attribute="class"
-          defaultTheme="system"
-          enableSystem
+          defaultTheme="dark"
+          enableSystem={false}
           disableTransitionOnChange
         >
           {children}
