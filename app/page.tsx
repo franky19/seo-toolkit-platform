@@ -211,7 +211,7 @@ export default function Home() {
               <Card className="glass border-purple-500/20">
                 <CardHeader>
                   <div className="flex items-center justify-between">
-                    <CardTitle className="text-white">Technical SEO</CardTitle>
+                    <CardTitle className="text-white">SEO Meta</CardTitle>
                     <StatusIcon status={auditReport.seoAudit.meta.status} />
                   </div>
                 </CardHeader>
