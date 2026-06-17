@@ -31,6 +31,21 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Basic SSRF guard: block localhost / private IP targets (does not prevent DNS rebinding)
+    const host = new URL(normalizedUrl).hostname.toLowerCase();
+    const isIpv4 = /^\d{1,3}(\.\d{1,3}){3}$/.test(host);
+    const isPrivateIpv4 =
+      isIpv4 &&
+      (host.startsWith('10.') ||
+        host.startsWith('192.168.') ||
+        /^172\.(1[6-9]|2\d|3[0-1])\./.test(host) ||
+        host.startsWith('127.') ||
+        host === '169.254.169.254');
+
+    if (host === 'localhost' || host.endsWith('.localhost') || host === '::1' || isPrivateIpv4) {
+      return NextResponse.json({ error: 'URL hostname is not allowed' }, { status: 400 });
+    }
+
     // Crawl the website
     let crawlResult;
     try {
