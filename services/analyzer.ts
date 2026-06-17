@@ -43,28 +43,31 @@ export class SEOAnalyzer {
     const viewport = $('meta[name="viewport"]').attr('content')?.trim();
 
     const issues: string[] = [];
-    let status: AuditStatus = 'PASS';
+    let hasError = false;
+    let hasWarning = false;
 
     if (!title) {
       issues.push('Missing title tag');
-      status = 'ERROR';
+      hasError = true;
     } else if (title.length < 30 || title.length > 60) {
       issues.push(`Title length is ${title.length} characters (recommended: 30-60)`);
-      status = status === 'ERROR' ? 'ERROR' : 'WARNING';
+      hasWarning = true;
     }
 
     if (!description) {
       issues.push('Missing meta description');
-      status = 'ERROR';
+      hasError = true;
     } else if (description.length < 120 || description.length > 160) {
       issues.push(`Description length is ${description.length} characters (recommended: 120-160)`);
-      status = status === 'ERROR' ? 'ERROR' : 'WARNING';
+      hasWarning = true;
     }
 
     if (!viewport) {
       issues.push('Missing viewport meta tag');
-      status = status === 'ERROR' ? 'ERROR' : 'WARNING';
+      hasWarning = true;
     }
+
+    const status: AuditStatus = hasError ? 'ERROR' : hasWarning ? 'WARNING' : 'PASS';
 
     return {
       status,
