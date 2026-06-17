@@ -174,38 +174,53 @@ export class SEOAnalyzer {
       status = 'ERROR';
     }
 
-    const headline = newsArticle?.data?.headline || $('h1').first().text().trim();
+    // Safe access to schema data
+    const schemaData = newsArticle?.data;
+    const headline = (typeof schemaData?.headline === 'string' ? schemaData.headline : null) || $('h1').first().text().trim();
     const headlineLength = headline?.length || 0;
 
     if (headlineLength < 10 || headlineLength > 110) {
       issues.push(`Headline length is ${headlineLength} characters (recommended: 10-110)`);
-      status = status === 'ERROR' ? 'ERROR' : 'WARNING';
+      status = status === 'ERROR' ? status : 'WARNING';
     }
 
-    const author = newsArticle?.data?.author?.name || newsArticle?.data?.author;
-    const publisher = newsArticle?.data?.publisher?.name || newsArticle?.data?.publisher;
-    const datePublished = newsArticle?.data?.datePublished;
-    const dateModified = newsArticle?.data?.dateModified;
-    const featuredImage = newsArticle?.data?.image?.url || newsArticle?.data?.image;
+    // Safe access to nested schema properties
+    const authorData = schemaData?.author;
+    const author = typeof authorData === 'string' ? authorData : 
+                   (typeof authorData === 'object' && authorData !== null && 'name' in authorData ? 
+                     String((authorData as Record<string, unknown>).name) : undefined);
+    
+    const publisherData = schemaData?.publisher;
+    const publisher = typeof publisherData === 'string' ? publisherData : 
+                      (typeof publisherData === 'object' && publisherData !== null && 'name' in publisherData ? 
+                        String((publisherData as Record<string, unknown>).name) : undefined);
+    
+    const datePublished = typeof schemaData?.datePublished === 'string' ? schemaData.datePublished : undefined;
+    const dateModified = typeof schemaData?.dateModified === 'string' ? schemaData.dateModified : undefined;
+    
+    const imageData = schemaData?.image;
+    const featuredImage = typeof imageData === 'string' ? imageData : 
+                          (typeof imageData === 'object' && imageData !== null && 'url' in imageData ? 
+                            String((imageData as Record<string, unknown>).url) : undefined);
 
     if (!author) {
       issues.push('Missing author information');
-      status = status === 'ERROR' ? 'ERROR' : 'WARNING';
+      status = status === 'ERROR' ? status : 'WARNING';
     }
 
     if (!publisher) {
       issues.push('Missing publisher information');
-      status = status === 'ERROR' ? 'ERROR' : 'WARNING';
+      status = status === 'ERROR' ? status : 'WARNING';
     }
 
     if (!datePublished) {
       issues.push('Missing publication date');
-      status = status === 'ERROR' ? 'ERROR' : 'WARNING';
+      status = status === 'ERROR' ? status : 'WARNING';
     }
 
     if (!featuredImage) {
       issues.push('Missing featured image');
-      status = status === 'ERROR' ? 'ERROR' : 'WARNING';
+      status = status === 'ERROR' ? status : 'WARNING';
     }
 
     const score = Math.max(0, 100 - (issues.length * 15));
@@ -356,9 +371,13 @@ export class SEOAnalyzer {
     const issues: string[] = [];
     const hasFAQSchema = schemaResult.schemas.some(s => s.type === 'FAQPage');
     const hasOrganizationSchema = schemaResult.hasOrganization;
-    const hasAuthorSchema = schemaResult.schemas.some(s => 
-      s.data?.author || s.type === 'Person'
-    );
+    
+    // Safe check for author schema
+    const hasAuthorSchema = schemaResult.schemas.some(s => {
+      if (s.type === 'Person') return true;
+      const data = s.data;
+      return typeof data === 'object' && data !== null && 'author' in data;
+    });
 
     // Calculate schema completeness
     const totalSchemas = 5;

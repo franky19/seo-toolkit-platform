@@ -26,7 +26,7 @@ export interface TwitterCardData {
 
 export interface SchemaOrgData {
   type: string;
-  data: any;
+  data: Record<string, unknown>;
   valid: boolean;
   errors?: string[];
 }
