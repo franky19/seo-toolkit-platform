@@ -284,14 +284,18 @@ export class SEOAnalyzer {
         const data = JSON.parse(content);
         const items = Array.isArray(data) ? data : [data];
 
-        items.forEach(item => {
-          if (item['@type']) {
+        items.forEach((item) => {
+          const rawType = (item as any)?.['@type'];
+          if (!rawType) return;
+
+          const types = Array.isArray(rawType) ? rawType : [rawType];
+          types.forEach((t) => {
             schemas.push({
-              type: item['@type'],
+              type: String(t),
               data: item,
               valid: true,
             });
-          }
+          });
         });
       } catch (error) {
         schemas.push({
