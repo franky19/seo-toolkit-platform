@@ -1,13 +1,33 @@
 # Google News SEO Toolkit
 
-> Product Description
+> Free tools and guides for news publishers to optimize articles for Google News, Google Discover, and AI search engines (ChatGPT, Gemini, Perplexity).
 
-Google News SEO Toolkit is a comprehensive SEO audit tool designed for validating website SEO, Google News readiness, schema validation, and AI search optimization. Our tool helps content publishers, news organizations, and website owners ensure their content is properly structured for maximum visibility in Google News and AI-powered search engines.
+## Tools
 
-## Features
+- [Google News Validator](https://seo-toolkit-platform.vercel.app/google-news-validator): Check NewsArticle schema, author, publisher, canonical, and Google News eligibility.
+- [NewsArticle Schema Generator](https://seo-toolkit-platform.vercel.app/news-schema-generator): Generate valid NewsArticle JSON-LD structured data for any article.
+- [News Sitemap Validator](https://seo-toolkit-platform.vercel.app/news-sitemap-validator): Validate Google News sitemap XML structure and freshness.
+- [Google Discover Checker](https://seo-toolkit-platform.vercel.app/google-discover-checker): Check image quality, E-E-A-T, Core Web Vitals for Discover eligibility.
+- [AI Citation Checker](https://seo-toolkit-platform.vercel.app/ai-citation-checker): Check if articles are optimized for ChatGPT, Gemini, and Perplexity citation.
+- [ChatGPT Citation Checker](https://seo-toolkit-platform.vercel.app/chatgpt-citation-checker): Verify OAI-SearchBot access and ChatGPT Search readiness.
+- [News SEO Checker](https://seo-toolkit-platform.vercel.app/news-seo-checker): Analyze title, meta, headings, and on-page SEO for news articles.
+- [Google News Score](https://seo-toolkit-platform.vercel.app/google-news-score): Calculate overall Google News readiness score (0-100).
 
-- Technical SEO Audit: Comprehensive analysis of meta tags, indexability, canonical URLs, and social media optimization
-- Google News Validation: Verify NewsArticle schema, author attribution, publication dates, and featured images
+## Guides
+
+- [Google News Requirements](https://seo-toolkit-platform.vercel.app/blog/google-news-requirements): Complete checklist for Google News compliance.
+- [How to Get Indexed in Google News](https://seo-toolkit-platform.vercel.app/blog/how-to-get-indexed-in-google-news): Step-by-step guide for publishers.
+- [NewsArticle Schema Guide](https://seo-toolkit-platform.vercel.app/blog/news-schema-guide): Complete JSON-LD implementation guide.
+- [Google Discover Guide](https://seo-toolkit-platform.vercel.app/blog/google-discover-guide): How to get articles in the Discovery feed.
+- [AI Search Optimization Guide](https://seo-toolkit-platform.vercel.app/blog/ai-search-optimization-guide): GEO guide for ChatGPT, Gemini, and Perplexity.
+- [ChatGPT SEO Guide](https://seo-toolkit-platform.vercel.app/blog/chatgpt-seo-guide): Get cited by ChatGPT Search.
+- [Google News Sitemap Guide](https://seo-toolkit-platform.vercel.app/blog/google-news-sitemap-guide): News sitemap setup and troubleshooting.
+- [News Publisher SEO Guide](https://seo-toolkit-platform.vercel.app/blog/news-publisher-seo-guide): Complete publisher SEO strategy for 2025.
+
+## About
+
+Google News SEO Toolkit is a free market validation product for news publishers, journalists, SEO teams, newsrooms, and media companies.
+Not affiliated with Google LLC.
 - Schema Validation: Detect and validate JSON-LD structured data including Organization, Article, Website, Breadcrumb, and FAQ schemas
 - XML Sitemap Discovery: Automatically find and validate XML sitemaps and news-specific sitemaps
 - AI Search Readiness: Check compatibility with ChatGPT, Google Gemini, Perplexity, and Claude
