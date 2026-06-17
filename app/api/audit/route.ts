@@ -70,7 +70,28 @@ export async function POST(request: NextRequest) {
     const seoAudit = SEOAnalyzer.analyzeSEO($, finalUrl);
     const googleNewsAudit = SEOAnalyzer.analyzeGoogleNews($);
     const schemaValidation = SEOAnalyzer.analyzeSchema($);
-    
+
+    // Enrich technical SEO with real robots.txt / sitemap checks
+    const origin = new URL(finalUrl).origin;
+    const [robotsTxt, sitemap] = await Promise.all([
+      WebCrawler.checkResource(`${origin}/robots.txt`),
+      WebCrawler.checkResource(`${origin}/sitemap.xml`),
+    ]);
+
+    seoAudit.technical.robotsTxt = robotsTxt;
+    seoAudit.technical.sitemap = sitemap;
+    if (!robotsTxt) seoAudit.technical.issues.push('robots.txt not found');
+    if (!sitemap) seoAudit.technical.issues.push('sitemap.xml not found');
+    seoAudit.technical.status = seoAudit.technical.issues.length > 0 ? 'WARNING' : 'PASS';
+
+    // Recompute SEO score since technical status may have changed
+    const seoScores = [
+      seoAudit.meta.status === 'PASS' ? 100 : seoAudit.meta.status === 'WARNING' ? 60 : 20,
+      seoAudit.technical.status === 'PASS' ? 100 : seoAudit.technical.status === 'WARNING' ? 60 : 20,
+      seoAudit.social.status === 'PASS' ? 100 : seoAudit.social.status === 'WARNING' ? 60 : 20,
+      seoAudit.indexability.status === 'PASS' ? 100 : seoAudit.indexability.status === 'WARNING' ? 60 : 20,
+    ];
+    seoAudit.score = Math.round(seoScores.reduce((a, b) => a + b, 0) / seoScores.length);
     // Analyze sitemap (async)
     let sitemapValidation;
     try {
