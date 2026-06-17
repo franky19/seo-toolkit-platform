@@ -7,6 +7,7 @@ const VALID_FEATURES = new Set([
   "publisher-dashboard",
   "editorial-ai",
   "discover-monitoring",
+  "news-sitemap-generator",
   "google-news-validator",
   "ai-citation-checker",
   "discover-checker",

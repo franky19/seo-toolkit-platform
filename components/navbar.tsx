@@ -3,32 +3,29 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Newspaper, Menu, X, ChevronDown } from "lucide-react";
+import { Newspaper, Menu, X } from "lucide-react";
 
 const tools = [
-  { href: "/google-news-validator", label: "Google News Validator" },
-  { href: "/news-schema-generator", label: "Schema Generator" },
-  { href: "/news-sitemap-validator", label: "Sitemap Validator" },
-  { href: "/google-discover-checker", label: "Discover Checker" },
-  { href: "/ai-citation-checker", label: "AI Citation Checker" },
-  { href: "/chatgpt-citation-checker", label: "ChatGPT Citation Checker" },
-  { href: "/news-seo-checker", label: "News SEO Checker" },
-  { href: "/google-news-score", label: "Google News Score" },
+  { href: "/tools/google-news-validator", label: "Google News Validator" },
+  { href: "/tools/google-news-checker", label: "Google News Checker" },
+  { href: "/tools/google-news-score", label: "Google News Score" },
+  { href: "/tools/google-discover-checker", label: "Discover Checker" },
+  { href: "/tools/chatgpt-citation-checker", label: "ChatGPT Citation Checker" },
+  { href: "/tools/perplexity-citation-checker", label: "Perplexity Citation Checker" },
+  { href: "/tools/ai-search-score", label: "AI Search Score" },
 ];
 
 const blog = [
+  { href: "/blog/google-news-seo", label: "Google News SEO" },
   { href: "/blog/google-news-requirements", label: "Google News Requirements" },
-  { href: "/blog/how-to-get-indexed-in-google-news", label: "Get Indexed in Google News" },
-  { href: "/blog/news-schema-guide", label: "NewsArticle Schema Guide" },
-  { href: "/blog/google-discover-guide", label: "Google Discover Guide" },
-  { href: "/blog/ai-search-optimization-guide", label: "AI Search Optimization" },
+  { href: "/blog/google-discover-optimization", label: "Google Discover Optimization" },
+  { href: "/blog/ai-search-optimization", label: "AI Search Optimization" },
+  { href: "/blog/google-news-ranking-factors", label: "Google News Ranking Factors" },
 ];
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [toolsOpen, setToolsOpen] = useState(false);
-  const [blogOpen, setBlogOpen] = useState(false);
   const pathname = usePathname();
 
   useEffect(() => {
@@ -39,8 +36,6 @@ export default function Navbar() {
 
   useEffect(() => {
     setMobileOpen(false);
-    setToolsOpen(false);
-    setBlogOpen(false);
   }, [pathname]);
 
   return (
@@ -65,63 +60,12 @@ export default function Navbar() {
 
         {/* Desktop Nav */}
         <div className="hidden md:flex items-center gap-1">
-          {/* Tools Dropdown */}
-          <div
-            className="relative"
-            onMouseEnter={() => setToolsOpen(true)}
-            onMouseLeave={() => setToolsOpen(false)}
-          >
-            <button className="flex items-center gap-1 px-3 py-2 text-sm text-white/70 hover:text-white rounded-md hover:bg-white/5 transition-colors">
-              Tools
-              <ChevronDown className={`w-3.5 h-3.5 transition-transform ${toolsOpen ? "rotate-180" : ""}`} />
-            </button>
-            {toolsOpen && (
-              <div className="absolute top-full left-0 mt-1 w-56 bg-[#111111] border border-white/10 rounded-xl shadow-2xl py-1.5 z-50">
-                {tools.map((t) => (
-                  <Link
-                    key={t.href}
-                    href={t.href}
-                    className="block px-4 py-2.5 text-sm text-white/70 hover:text-white hover:bg-white/5 transition-colors"
-                  >
-                    {t.label}
-                  </Link>
-                ))}
-              </div>
-            )}
-          </div>
-
-          {/* Blog Dropdown */}
-          <div
-            className="relative"
-            onMouseEnter={() => setBlogOpen(true)}
-            onMouseLeave={() => setBlogOpen(false)}
-          >
-            <button className="flex items-center gap-1 px-3 py-2 text-sm text-white/70 hover:text-white rounded-md hover:bg-white/5 transition-colors">
-              Blog
-              <ChevronDown className={`w-3.5 h-3.5 transition-transform ${blogOpen ? "rotate-180" : ""}`} />
-            </button>
-            {blogOpen && (
-              <div className="absolute top-full left-0 mt-1 w-64 bg-[#111111] border border-white/10 rounded-xl shadow-2xl py-1.5 z-50">
-                {blog.map((b) => (
-                  <Link
-                    key={b.href}
-                    href={b.href}
-                    className="block px-4 py-2.5 text-sm text-white/70 hover:text-white hover:bg-white/5 transition-colors"
-                  >
-                    {b.label}
-                  </Link>
-                ))}
-                <div className="border-t border-white/5 mt-1 pt-1">
-                  <Link
-                    href="/blog"
-                    className="block px-4 py-2.5 text-sm text-indigo-400 hover:text-indigo-300 hover:bg-white/5 transition-colors font-medium"
-                  >
-                    View all posts →
-                  </Link>
-                </div>
-              </div>
-            )}
-          </div>
+          <Link href="/tools/google-news-validator" className="px-3 py-2 text-sm text-white/70 hover:text-white rounded-md hover:bg-white/5 transition-colors">
+            Tools
+          </Link>
+          <Link href="/blog" className="px-3 py-2 text-sm text-white/70 hover:text-white rounded-md hover:bg-white/5 transition-colors">
+            Blog
+          </Link>
         </div>
 
         {/* Desktop CTA */}

@@ -146,3 +146,11 @@ export interface RateLimitInfo {
   count: number;
   resetTime: number;
 }
+
+export type QuotaInfo = {
+  limit: number;
+  used: number;
+  remaining: number;
+  resetAt: string;
+  keyType: "anonymous" | "authenticated";
+};

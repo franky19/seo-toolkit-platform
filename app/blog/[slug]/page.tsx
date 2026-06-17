@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { blogPosts } from "@/lib/blog-data";
+import { requestedBlogPosts } from "@/lib/blog-architecture";
 import Navbar from "@/components/navbar";
 import Footer from "@/components/footer";
 import { ArrowLeft, Clock, ArrowRight } from "lucide-react";
@@ -11,12 +12,25 @@ type Props = {
 };
 
 export async function generateStaticParams() {
-  return blogPosts.map((post) => ({ slug: post.slug }));
+  const posts = [
+    ...requestedBlogPosts,
+    ...blogPosts.filter(
+      (post) => !requestedBlogPosts.some((requested) => requested.slug === post.slug),
+    ),
+  ];
+
+  return posts.map((post) => ({ slug: post.slug }));
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const post = blogPosts.find((p) => p.slug === slug);
+  const posts = [
+    ...requestedBlogPosts,
+    ...blogPosts.filter(
+      (post) => !requestedBlogPosts.some((requested) => requested.slug === post.slug),
+    ),
+  ];
+  const post = posts.find((p) => p.slug === slug);
   if (!post) return { title: "Post Not Found" };
 
   const url = `https://seo-toolkit-platform.vercel.app/blog/${post.slug}`;
@@ -42,15 +56,22 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export default async function BlogPostPage({ params }: Props) {
+export default async function BlogPostPage({ params }: Readonly<Props>) {
   const { slug } = await params;
-  const post = blogPosts.find((p) => p.slug === slug);
+  const posts = [
+    ...requestedBlogPosts,
+    ...blogPosts.filter(
+      (item) => !requestedBlogPosts.some((requested) => requested.slug === item.slug),
+    ),
+  ];
+
+  const post = posts.find((p) => p.slug === slug);
   if (!post) notFound();
 
-  const postIndex = blogPosts.indexOf(post);
-  const prev = blogPosts[postIndex - 1];
-  const next = blogPosts[postIndex + 1];
-  const related = blogPosts.filter((p) => p.slug !== post.slug && p.category === post.category).slice(0, 3);
+  const postIndex = posts.indexOf(post);
+  const prev = posts[postIndex - 1];
+  const next = posts[postIndex + 1];
+  const related = posts.filter((p) => p.slug !== post.slug && p.category === post.category).slice(0, 3);
 
   return (
     <div className="bg-[#0a0a0a] min-h-screen text-white">

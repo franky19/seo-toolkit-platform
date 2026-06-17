@@ -1,17 +1,24 @@
 import type { MetadataRoute } from "next";
 import { blogPosts } from "@/lib/blog-data";
+import { requestedBlogPosts } from "@/lib/blog-architecture";
 
 const baseUrl = "https://seo-toolkit-platform.vercel.app";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();
+  const allPosts = [
+    ...requestedBlogPosts,
+    ...blogPosts.filter(
+      (post) => !requestedBlogPosts.some((requested) => requested.slug === post.slug),
+    ),
+  ];
 
   const staticPages: MetadataRoute.Sitemap = [
     {
       url: baseUrl,
       lastModified: now,
       changeFrequency: "daily",
-      priority: 1.0,
+      priority: 0.99,
     },
     {
       url: `${baseUrl}/blog`,
@@ -67,9 +74,51 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "monthly",
       priority: 0.8,
     },
+    {
+      url: `${baseUrl}/tools/google-news-validator`,
+      lastModified: now,
+      changeFrequency: "weekly",
+      priority: 0.9,
+    },
+    {
+      url: `${baseUrl}/tools/google-news-checker`,
+      lastModified: now,
+      changeFrequency: "weekly",
+      priority: 0.9,
+    },
+    {
+      url: `${baseUrl}/tools/google-news-score`,
+      lastModified: now,
+      changeFrequency: "weekly",
+      priority: 0.85,
+    },
+    {
+      url: `${baseUrl}/tools/google-discover-checker`,
+      lastModified: now,
+      changeFrequency: "weekly",
+      priority: 0.85,
+    },
+    {
+      url: `${baseUrl}/tools/chatgpt-citation-checker`,
+      lastModified: now,
+      changeFrequency: "weekly",
+      priority: 0.85,
+    },
+    {
+      url: `${baseUrl}/tools/perplexity-citation-checker`,
+      lastModified: now,
+      changeFrequency: "weekly",
+      priority: 0.85,
+    },
+    {
+      url: `${baseUrl}/tools/ai-search-score`,
+      lastModified: now,
+      changeFrequency: "weekly",
+      priority: 0.85,
+    },
   ];
 
-  const blogPages: MetadataRoute.Sitemap = blogPosts.map((post) => ({
+  const blogPages: MetadataRoute.Sitemap = allPosts.map((post) => ({
     url: `${baseUrl}/blog/${post.slug}`,
     lastModified: new Date(post.date),
     changeFrequency: "monthly" as const,

@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { blogPosts } from "@/lib/blog-data";
+import { requestedBlogPosts } from "@/lib/blog-architecture";
 import Navbar from "@/components/navbar";
 import Footer from "@/components/footer";
-import { ArrowRight, Clock, Tag } from "lucide-react";
+import { ArrowRight, Clock } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Blog – Google News SEO Guides & Tutorials",
@@ -12,11 +13,18 @@ export const metadata: Metadata = {
   alternates: { canonical: "https://seo-toolkit-platform.vercel.app/blog" },
 };
 
-const categories = [...new Set(blogPosts.map((p) => p.category))];
+const allPosts = [
+  ...requestedBlogPosts,
+  ...blogPosts.filter(
+    (post) => !requestedBlogPosts.some((requested) => requested.slug === post.slug),
+  ),
+];
+
+const categories = [...new Set(allPosts.map((p) => p.category))];
 
 export default function BlogIndexPage() {
-  const featured = blogPosts[0];
-  const rest = blogPosts.slice(1);
+  const featured = allPosts[0];
+  const rest = allPosts.slice(1);
 
   return (
     <div className="bg-[#0a0a0a] min-h-screen text-white">
@@ -110,7 +118,7 @@ export default function BlogIndexPage() {
             name: "Google News SEO Toolkit Blog",
             url: "https://seo-toolkit-platform.vercel.app/blog",
             description: "Guides and tutorials for news publishers on Google News SEO, schema markup, and AI search optimization.",
-            blogPost: blogPosts.map((p) => ({
+            blogPost: allPosts.map((p) => ({
               "@type": "BlogPosting",
               headline: p.title,
               url: `https://seo-toolkit-platform.vercel.app/blog/${p.slug}`,

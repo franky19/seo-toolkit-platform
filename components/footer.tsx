@@ -1,26 +1,27 @@
 import Link from "next/link";
-import { Newspaper, Twitter, Github, Rss } from "lucide-react";
+import { Newspaper, X, Rss } from "lucide-react";
 
 const tools = [
-  { href: "/google-news-validator", label: "Google News Validator" },
-  { href: "/news-schema-generator", label: "Schema Generator" },
-  { href: "/news-sitemap-validator", label: "Sitemap Validator" },
-  { href: "/google-discover-checker", label: "Discover Checker" },
-  { href: "/ai-citation-checker", label: "AI Citation Checker" },
-  { href: "/chatgpt-citation-checker", label: "ChatGPT Citation" },
-  { href: "/news-seo-checker", label: "News SEO Checker" },
-  { href: "/google-news-score", label: "Google News Score" },
+  { href: "/tools/google-news-validator", label: "Google News Validator" },
+  { href: "/tools/google-news-checker", label: "Google News Checker" },
+  { href: "/tools/google-news-score", label: "Google News Score" },
+  { href: "/tools/google-discover-checker", label: "Discover Checker" },
+  { href: "/tools/chatgpt-citation-checker", label: "ChatGPT Citation Checker" },
+  { href: "/tools/perplexity-citation-checker", label: "Perplexity Citation Checker" },
+  { href: "/tools/ai-search-score", label: "AI Search Score" },
 ];
 
 const blogLinks = [
+  { href: "/blog/google-news-seo", label: "Google News SEO" },
   { href: "/blog/google-news-requirements", label: "Google News Requirements" },
-  { href: "/blog/how-to-get-indexed-in-google-news", label: "Get Indexed in Google News" },
-  { href: "/blog/news-schema-guide", label: "NewsArticle Schema Guide" },
-  { href: "/blog/google-discover-guide", label: "Google Discover Guide" },
-  { href: "/blog/chatgpt-seo-guide", label: "ChatGPT SEO Guide" },
-  { href: "/blog/ai-search-optimization-guide", label: "AI Search Optimization" },
-  { href: "/blog/google-news-sitemap-guide", label: "News Sitemap Guide" },
-  { href: "/blog/news-publisher-seo-guide", label: "Publisher SEO Guide" },
+  { href: "/blog/google-discover-optimization", label: "Google Discover Optimization" },
+  { href: "/blog/google-news-schema", label: "Google News Schema" },
+  { href: "/blog/chatgpt-seo", label: "ChatGPT SEO" },
+  { href: "/blog/perplexity-seo", label: "Perplexity SEO" },
+  { href: "/blog/gemini-seo", label: "Gemini SEO" },
+  { href: "/blog/ai-search-optimization", label: "AI Search Optimization" },
+  { href: "/blog/newsarticle-schema", label: "NewsArticle Schema" },
+  { href: "/blog/google-news-ranking-factors", label: "Google News Ranking Factors" },
 ];
 
 export default function Footer() {
@@ -49,7 +50,7 @@ export default function Footer() {
                 className="w-8 h-8 rounded-lg bg-white/5 hover:bg-white/10 flex items-center justify-center transition-colors"
                 aria-label="Twitter"
               >
-                <Twitter className="w-4 h-4 text-white/60" />
+                <X className="w-4 h-4 text-white/60" />
               </a>
               <a
                 href="/rss.xml"

@@ -8,6 +8,14 @@ import {
   AuditStatus,
   SchemaOrgData,
 } from '@/types';
+import {
+  getSchemaTextValue,
+  getSchemaUrlValue,
+  hasSchemaProperty,
+  isJsonLdItem,
+  isString,
+  parseJsonLdTypes,
+} from '@/lib/type-guards';
 import { WebCrawler } from './crawler';
 
 export class SEOAnalyzer {
@@ -176,7 +184,7 @@ export class SEOAnalyzer {
 
     // Safe access to schema data
     const schemaData = newsArticle?.data;
-    const headline = (typeof schemaData?.headline === 'string' ? schemaData.headline : null) || $('h1').first().text().trim();
+    const headline = (isString(schemaData?.headline) ? schemaData.headline : null) || $('h1').first().text().trim();
     const headlineLength = headline?.length || 0;
 
     if (headlineLength < 10 || headlineLength > 110) {
@@ -185,23 +193,11 @@ export class SEOAnalyzer {
     }
 
     // Safe access to nested schema properties
-    const authorData = schemaData?.author;
-    const author = typeof authorData === 'string' ? authorData : 
-                   (typeof authorData === 'object' && authorData !== null && 'name' in authorData ? 
-                     String((authorData as Record<string, unknown>).name) : undefined);
-    
-    const publisherData = schemaData?.publisher;
-    const publisher = typeof publisherData === 'string' ? publisherData : 
-                      (typeof publisherData === 'object' && publisherData !== null && 'name' in publisherData ? 
-                        String((publisherData as Record<string, unknown>).name) : undefined);
-    
-    const datePublished = typeof schemaData?.datePublished === 'string' ? schemaData.datePublished : undefined;
-    const dateModified = typeof schemaData?.dateModified === 'string' ? schemaData.dateModified : undefined;
-    
-    const imageData = schemaData?.image;
-    const featuredImage = typeof imageData === 'string' ? imageData : 
-                          (typeof imageData === 'object' && imageData !== null && 'url' in imageData ? 
-                            String((imageData as Record<string, unknown>).url) : undefined);
+    const author = getSchemaTextValue(schemaData?.author);
+    const publisher = getSchemaTextValue(schemaData?.publisher);
+    const datePublished = isString(schemaData?.datePublished) ? schemaData.datePublished : undefined;
+    const dateModified = isString(schemaData?.dateModified) ? schemaData.dateModified : undefined;
+    const featuredImage = getSchemaUrlValue(schemaData?.image);
 
     if (!author) {
       issues.push('Missing author information');
@@ -281,17 +277,15 @@ export class SEOAnalyzer {
         const content = $(el).html();
         if (!content) return;
 
-        const data = JSON.parse(content);
+        const data = JSON.parse(content) as unknown;
         const items = Array.isArray(data) ? data : [data];
 
         items.forEach((item) => {
-          const rawType = (item as any)?.['@type'];
-          if (!rawType) return;
+          if (!isJsonLdItem(item)) return;
 
-          const types = Array.isArray(rawType) ? rawType : [rawType];
-          types.forEach((t) => {
+          parseJsonLdTypes(item).forEach((type) => {
             schemas.push({
-              type: String(t),
+              type,
               data: item,
               valid: true,
             });
@@ -379,8 +373,7 @@ export class SEOAnalyzer {
     // Safe check for author schema
     const hasAuthorSchema = schemaResult.schemas.some(s => {
       if (s.type === 'Person') return true;
-      const data = s.data;
-      return typeof data === 'object' && data !== null && 'author' in data;
+      return hasSchemaProperty(s.data, 'author');
     });
 
     // Calculate schema completeness

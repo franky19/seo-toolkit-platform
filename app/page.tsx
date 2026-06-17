@@ -1,1155 +1,826 @@
-﻿"use client";
+"use client";
 
 import type { FormEvent } from "react";
-import { useEffect, useState } from "react";
-import Link from "next/link";
-import { motion, AnimatePresence } from "framer-motion";
+import { useEffect, useMemo, useState } from "react";
 import { track } from "@vercel/analytics";
 import {
-  Search,
-  CheckCircle2,
   AlertCircle,
-  XCircle,
-  Loader2,
-  ArrowRight,
-  Newspaper,
   Bot,
-  Compass,
-  FileCode,
-  Rss,
-  BarChart2,
-  ThumbsUp,
-  Building2,
-  PenLine,
-  Tv,
-  Globe,
   Check,
-  X as XIcon,
-  ChevronRight,
-  Star,
+  CheckCircle2,
+  ChevronDown,
+  Compass,
+  FileCode2,
+  Loader2,
+  Mail,
+  Newspaper,
+  Search,
+  Sparkles,
+  ThumbsUp,
+  X,
   Zap,
 } from "lucide-react";
-import { Progress } from "@/components/ui/progress";
-import { RateLimiter } from "@/lib/rate-limiter";
-import { AuditReport, AuditStatus } from "@/types";
-import { getScoreColor, isValidUrl } from "@/lib/utils";
 import Navbar from "@/components/navbar";
 import Footer from "@/components/footer";
+import { Progress } from "@/components/ui/progress";
+import { isQuotaInfo } from "@/lib/type-guards";
+import { cacheQuota, getClientFingerprint, getOrCreateAnonymousId, quotaLabel, readCachedQuota, type QuotaInfo } from "@/lib/quota-client";
+import { getScoreColor, isValidUrl } from "@/lib/utils";
+import { AuditReport, AuditStatus } from "@/types";
 
-// â”€â”€â”€ Types â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-const FEATURES = [
+const WHY_NOT_IN_NEWS = [
+  "Missing or invalid NewsArticle schema",
+  "Article blocked by noindex or robots directives",
+  "Weak author and publisher trust signals",
+  "Images below 1200px hurting Discover eligibility",
+  "No fresh news sitemap or outdated publication dates",
+  "Thin entity coverage for AI citation engines",
+];
+
+const ANALYSIS_AREAS = [
   {
+    title: "Google News Score",
+    keyword: "google news seo",
+    text: "Validate google news requirements, news metadata, publisher signals, and google news optimization readiness.",
     icon: Newspaper,
-    title: "Google News Validator",
-    desc: "Check NewsArticle schema, author, publisher, canonical URL, images, and publication date compliance.",
-    href: "/google-news-validator",
-    badge: "Core",
-    badgeColor: "bg-green-500/10 text-green-400 border-green-500/20",
   },
   {
-    icon: Bot,
-    title: "AI Citation Checker",
-    desc: "Verify your article is optimized for citation by ChatGPT Search, Gemini, and Perplexity AI.",
-    href: "/ai-citation-checker",
-    badge: "New",
-    badgeColor: "bg-indigo-500/10 text-indigo-400 border-indigo-500/20",
-  },
-  {
-    icon: Rss,
-    title: "News Sitemap Validator",
-    desc: "Validate your Google News sitemap structure, freshness signals, and submission errors.",
-    href: "/news-sitemap-validator",
-    badge: "Core",
-    badgeColor: "bg-green-500/10 text-green-400 border-green-500/20",
-  },
-  {
-    icon: FileCode,
-    title: "News Schema Generator",
-    desc: "Generate NewsArticle JSON-LD, Organization Schema, and Breadcrumb Schema for any article.",
-    href: "/news-schema-generator",
-    badge: "Popular",
-    badgeColor: "bg-yellow-500/10 text-yellow-400 border-yellow-500/20",
-  },
-  {
+    title: "Discover Score",
+    keyword: "google discover optimization",
+    text: "Check image quality, freshness, headlines, and feed eligibility for stronger discover traffic.",
     icon: Compass,
-    title: "Discover Readiness Checker",
-    desc: "Analyze image quality, content freshness, and Google Discover ranking signals.",
-    href: "/google-discover-checker",
-    badge: "Core",
-    badgeColor: "bg-green-500/10 text-green-400 border-green-500/20",
   },
   {
-    icon: BarChart2,
-    title: "Article SEO Analyzer",
-    desc: "Audit title, meta description, headings, readability, and on-page SEO factors.",
-    href: "/news-seo-checker",
-    badge: "Core",
-    badgeColor: "bg-green-500/10 text-green-400 border-green-500/20",
+    title: "AI Citation Score",
+    keyword: "ai search optimization",
+    text: "Measure llm optimization, entity clarity, and citation readiness for ChatGPT, Gemini, Claude, and Perplexity.",
+    icon: Bot,
+  },
+  {
+    title: "Technical SEO Score",
+    keyword: "google news checker",
+    text: "Audit core technical issues including indexability, canonical integrity, schema coverage, and performance basics.",
+    icon: FileCode2,
   },
 ];
 
-const AUDIENCE = [
-  { icon: Newspaper, label: "Publishers" },
-  { icon: PenLine, label: "Journalists" },
-  { icon: Building2, label: "Newsrooms" },
-  { icon: BarChart2, label: "SEO Teams" },
-  { icon: Tv, label: "Editorial Teams" },
-  { icon: Globe, label: "Media Companies" },
+const MANUAL_VS_TOOLKIT = [
+  ["Audit speed per article", "20-45 min", "< 20 sec"],
+  ["Google News validator checks", "Inconsistent", "Always included"],
+  ["Google Discover optimization hints", "Manual guesswork", "Actionable checklist"],
+  ["AI search optimization signals", "Not standardized", "Scored and prioritized"],
+  ["Fix recommendations", "Not structured", "Clear next steps"],
 ];
 
-const ROADMAP = [
+const GOOGLE_NEWS_CHECKLIST = [
+  "NewsArticle schema includes headline, image, datePublished, dateModified, author, and publisher",
+  "Article URL is crawlable, indexable, and canonicalized",
+  "Publisher identity is visible with editorial transparency",
+  "Content is factual, timely, and clearly categorized as news",
+  "News sitemap includes last 48-hour URLs and is submitted to Search Console",
+  "Article image is high quality and at least 1200px wide",
+];
+
+const AI_CHECKLIST = [
   {
-    title: "Google News Monitoring",
-    desc: "Track your articles' Google News indexing status in real time.",
-    votes: 847,
-    id: "news-monitoring",
+    engine: "ChatGPT",
+    points: [
+      "Clear question-and-answer blocks with direct claims",
+      "Strong bylines and references for citation confidence",
+    ],
   },
   {
-    title: "AI Citation Monitoring",
-    desc: "Get alerts when your content is cited by ChatGPT, Gemini, or Perplexity.",
-    votes: 723,
-    id: "ai-monitoring",
+    engine: "Gemini",
+    points: [
+      "Structured data and entity clarity aligned with Google systems",
+      "Author expertise and trust pages linked internally",
+    ],
   },
   {
-    title: "Bulk URL Analysis",
-    desc: "Analyze hundreds of articles at once with CSV export.",
-    votes: 612,
-    id: "bulk-analysis",
+    engine: "Claude",
+    points: [
+      "Context-rich explanations and balanced claims",
+      "Transparent sources and methodology sections",
+    ],
   },
   {
-    title: "Publisher Dashboard",
-    desc: "Full newsroom dashboard with team collaboration and reporting.",
-    votes: 589,
-    id: "publisher-dashboard",
-  },
-  {
-    title: "Editorial Recommendations",
-    desc: "AI-powered content suggestions to improve your Google News ranking.",
-    votes: 451,
-    id: "editorial-ai",
-  },
-  {
-    title: "Google Discover Monitoring",
-    desc: "Track Discover impressions and clicks for your articles.",
-    votes: 398,
-    id: "discover-monitoring",
+    engine: "Perplexity",
+    points: [
+      "Precise facts with scannable headings and source-ready snippets",
+      "Strong topical authority through internal knowledge hubs",
+    ],
   },
 ];
 
-// Main component
+const FAQS = [
+  {
+    q: "What is Google News SEO?",
+    a: "Google News SEO is the practice of optimizing article pages so they are eligible, indexable, and competitive in Google News and Top Stories surfaces.",
+  },
+  {
+    q: "How do I get into Google News?",
+    a: "Publish original news content, implement valid NewsArticle schema, maintain editorial transparency, and ensure strong crawl/index health. Then monitor in Search Console and Publisher Center.",
+  },
+  {
+    q: "Why is my article not indexed in Google News?",
+    a: "Common reasons include weak schema, noindex directives, low trust signals, stale sitemaps, slow crawling, or unclear publication metadata.",
+  },
+  {
+    q: "What schema is required for Google News?",
+    a: "NewsArticle schema is the core requirement, with supported fields for headline, image, datePublished, dateModified, author, publisher, and mainEntityOfPage.",
+  },
+  {
+    q: "Does Google Discover require schema?",
+    a: "Discover can surface pages without schema, but structured data improves understanding, while large images, freshness, and content quality are major ranking signals.",
+  },
+  {
+    q: "How does a Google News validator help?",
+    a: "A google news validator quickly checks eligibility signals and flags exact fixes, reducing manual audits and improving indexing confidence.",
+  },
+  {
+    q: "What is google discover optimization in practice?",
+    a: "It means optimizing image size and quality, aligning article intent to audience interests, improving on-page experience, and publishing with clear freshness signals.",
+  },
+  {
+    q: "How do AI search engines choose sources?",
+    a: "AI systems prioritize sources with clear entities, trustworthy authorship, strong structure, and verifiable information that can be cited with confidence.",
+  },
+  {
+    q: "Can ChatGPT cite my article?",
+    a: "Yes. Improve citation likelihood by using factual writing, clear structure, rich schema, and transparent authorship.",
+  },
+  {
+    q: "How does Perplexity select references?",
+    a: "Perplexity favors pages with concise answers, trustworthy data points, and strong topical relevance for the query.",
+  },
+  {
+    q: "What is Generative Engine Optimization?",
+    a: "Generative Engine Optimization, or GEO optimization, is the process of making content easy for AI engines to retrieve, trust, summarize, and cite.",
+  },
+  {
+    q: "Is this tool free forever?",
+    a: "Yes. The public analyzer is free with a 5 analyses per day quota for market validation and early feedback.",
+  },
+  {
+    q: "Do I need to create an account to run audits?",
+    a: "No login is required for the free analyzer. Authenticated users currently have the same 5-per-day quota.",
+  },
+  {
+    q: "What happens after I get a score?",
+    a: "You receive prioritized fixes for Google News SEO, Discover optimization, AI citation readiness, and technical SEO so you can improve fast.",
+  },
+  {
+    q: "How often does quota reset?",
+    a: "Quota resets every 24 hours. Your remaining count is shown directly in the analyzer section.",
+  },
+  {
+    q: "Does this support llm optimization beyond Google?",
+    a: "Yes. The analyzer includes chatgpt seo, gemini seo, perplexity seo, and broader ai search optimization checks.",
+  },
+];
+
+const VOTING_FEATURES = [
+  { id: "news-sitemap-generator", title: "News Sitemap Generator", baseVotes: 192 },
+  { id: "schema-generator", title: "Schema Generator", baseVotes: 244 },
+  { id: "ai-citation-checker", title: "AI Citation Checker", baseVotes: 276 },
+  { id: "discover-checker", title: "Google Discover Checker", baseVotes: 218 },
+];
+
+function StatusIcon({ status }: Readonly<{ status: AuditStatus }>) {
+  if (status === "PASS") return <CheckCircle2 className="h-4 w-4 text-green-500" />;
+  if (status === "WARNING") return <AlertCircle className="h-4 w-4 text-amber-500" />;
+  return <X className="h-4 w-4 text-red-500" />;
+}
+
 export default function Home() {
   const [url, setUrl] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [auditReport, setAuditReport] = useState<AuditReport | null>(null);
+  const [quota, setQuota] = useState<QuotaInfo | null>(null);
 
-  // Waitlist form
-  const [wName, setWName] = useState("");
-  const [wEmail, setWEmail] = useState("");
-  const [wFeature, setWFeature] = useState("");
-  const [wLoading, setWLoading] = useState(false);
-  const [wSuccess, setWSuccess] = useState(false);
-  const [wError, setWError] = useState<string | null>(null);
+  const [waitlistEmail, setWaitlistEmail] = useState("");
+  const [waitlistLoading, setWaitlistLoading] = useState(false);
+  const [waitlistSuccess, setWaitlistSuccess] = useState(false);
 
-  // Feature votes
   const [votes, setVotes] = useState<Record<string, number>>({});
+  const [exitOpen, setExitOpen] = useState(false);
+
+  const faqSchema = useMemo(
+    () => ({
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      mainEntity: FAQS.map((faq) => ({
+        "@type": "Question",
+        name: faq.q,
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: faq.a,
+        },
+      })),
+    }),
+    [],
+  );
+
+  async function fetchQuota() {
+    try {
+      const response = await fetch("/api/quota", {
+        headers: {
+          "x-client-fingerprint": getClientFingerprint(),
+          "x-anon-id": getOrCreateAnonymousId(),
+        },
+      });
+      if (!response.ok) return;
+      const data = await response.json();
+      if (isQuotaInfo(data.quota)) {
+        setQuota(data.quota);
+        cacheQuota(data.quota);
+      }
+    } catch {
+      const cached = readCachedQuota();
+      if (cached) setQuota(cached);
+    }
+  }
 
   useEffect(() => {
+    const cached = readCachedQuota();
+    if (cached) setQuota(cached);
+    fetchQuota();
+
     const key = "gnst_returning_visitor";
     const isReturning = localStorage.getItem(key) === "1";
     track("returning_visitor", { returning: isReturning ? "yes" : "no" });
     localStorage.setItem(key, "1");
 
-    const fired = new Set<number>();
-    const marks = [25, 50, 75, 100];
-
-    const onScroll = () => {
-      const doc = document.documentElement;
-      const scrollable = Math.max(1, doc.scrollHeight - window.innerHeight);
-      const pct = Math.min(100, Math.round((window.scrollY / scrollable) * 100));
-      for (const mark of marks) {
-        if (pct >= mark && !fired.has(mark)) {
-          fired.add(mark);
-          track("scroll_depth", { percent: mark });
-        }
-      }
+    const onMouseOut = (event: MouseEvent) => {
+      const dismissed = localStorage.getItem("gnst_exit_modal_closed") === "1";
+      if (dismissed || event.clientY > 8) return;
+      setExitOpen(true);
+      localStorage.setItem("gnst_exit_modal_closed", "1");
+      track("exit_intent_modal_shown");
     };
 
-    window.addEventListener("scroll", onScroll, { passive: true });
-    onScroll();
-    return () => window.removeEventListener("scroll", onScroll);
+    document.addEventListener("mouseout", onMouseOut);
+    return () => document.removeEventListener("mouseout", onMouseOut);
   }, []);
 
-  const handleAudit = async () => {
+  async function handleAudit() {
     setError(null);
 
-    if (!url) {
-      setError("Please enter a URL");
+    if (!url.trim()) {
+      setError("Please paste an article URL.");
       return;
     }
+
     if (!isValidUrl(url)) {
-      setError("Please enter a valid URL (include https://)");
+      setError("Please enter a valid URL including https://.");
       return;
     }
 
-    const rateLimit = RateLimiter.checkLimit();
-    if (!rateLimit.allowed) {
-      setError(
-        `Daily limit reached. Resets in ${RateLimiter.getRemainingTime()}`,
-      );
+    if (quota && quota.remaining <= 0) {
+      setError("Daily limit reached. Please try again after reset.");
       return;
     }
 
-    track("analyze_click", { url });
     setLoading(true);
     setAuditReport(null);
+    track("analyze_click", { location: "hero" });
 
     try {
       const response = await fetch("/api/audit", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          "x-client-fingerprint": getClientFingerprint(),
+          "x-anon-id": getOrCreateAnonymousId(),
+        },
         body: JSON.stringify({ url }),
       });
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || "Failed to analyze article");
+      const data = await response.json();
+
+      if (isQuotaInfo(data?.quota)) {
+        setQuota(data.quota);
+        cacheQuota(data.quota);
       }
 
-      const data: AuditReport = await response.json();
-      setAuditReport(data);
-      RateLimiter.incrementCount();
+      if (!response.ok) {
+        throw new Error(data.error || "Unable to analyze this URL right now.");
+      }
+
+      setAuditReport(data as AuditReport);
       track("analyze_success");
     } catch (err: unknown) {
-      setError(
-        err instanceof Error
-          ? err.message
-          : "An error occurred during analysis",
-      );
+      setError(err instanceof Error ? err.message : "Unexpected error while analyzing URL.");
+      track("analyze_error");
     } finally {
       setLoading(false);
     }
-  };
+  }
 
-  const handleWaitlist = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (!wEmail || !wEmail.includes("@")) {
-      setWError("Please enter a valid email");
+  async function handleWaitlistSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (!waitlistEmail?.includes("@")) {
+      setError("Please enter a valid email for early access.");
       return;
     }
-    setWLoading(true);
-    setWError(null);
+
+    setWaitlistLoading(true);
     try {
-      const res = await fetch("/api/waitlist", {
+      const response = await fetch("/api/waitlist", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: wName, email: wEmail, feature: wFeature }),
+        body: JSON.stringify({
+          email: waitlistEmail,
+          feature: "homepage-news-analyzer",
+          source: "newsletter",
+        }),
       });
-      if (!res.ok) throw new Error("Failed to join waitlist");
-      setWSuccess(true);
-      track("waitlist_signup", { feature: wFeature });
-    } catch {
-      setWError("Something went wrong. Please try again.");
-    } finally {
-      setWLoading(false);
-    }
-  };
 
-  const handleVote = async (id: string) => {
-    if (votes[id]) return; // already voted
-    setVotes((v) => ({ ...v, [id]: 1 }));
-    track("feature_vote", { feature: id });
+      if (!response.ok) throw new Error("Could not submit waitlist request");
+      setWaitlistSuccess(true);
+      track("newsletter_signup");
+    } catch {
+      setError("Unable to join newsletter right now. Please retry in a moment.");
+    } finally {
+      setWaitlistLoading(false);
+    }
+  }
+
+  async function handleVote(featureId: string) {
+    if (votes?.[featureId]) return;
+
+    setVotes((prev) => ({ ...prev, [featureId]: 1 }));
+    track("feature_vote", { feature: featureId });
+
     try {
       await fetch("/api/vote", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ feature: id }),
+        body: JSON.stringify({ feature: featureId }),
       });
     } catch {
-      /* silent */
+      // no-op
     }
-  };
+  }
 
-  const StatusIcon = ({ status }: { status: AuditStatus }) => {
-    if (status === "PASS")
-      return <CheckCircle2 className="w-4 h-4 text-green-500" />;
-    if (status === "WARNING")
-      return <AlertCircle className="w-4 h-4 text-yellow-500" />;
-    return <XCircle className="w-4 h-4 text-red-500" />;
-  };
+  const remainingLabel = quota ? quotaLabel(quota) : "Loading daily quota...";
+  const discoverScore = auditReport
+    ? Math.round((auditReport.technicalSEOScore + auditReport.schemaScore) / 2)
+    : 79;
+
+  const scores = auditReport
+    ? [
+        { label: "Overall Score", value: auditReport.overallScore },
+        { label: "Google News Score", value: auditReport.googleNewsScore },
+        { label: "Discover Score", value: discoverScore },
+        { label: "AI Citation Score", value: auditReport.aiSearchScore },
+        { label: "Technical SEO Score", value: auditReport.technicalSEOScore },
+      ]
+    : [
+        { label: "Overall Score", value: 84 },
+        { label: "Google News Score", value: 88 },
+        { label: "Discover Score", value: 79 },
+        { label: "AI Citation Score", value: 82 },
+        { label: "Technical SEO Score", value: 83 },
+      ];
 
   return (
-    <div className="bg-[#0a0a0a] min-h-screen text-white">
+    <div className="min-h-screen bg-[#061217] text-slate-100">
       <Navbar />
 
-      {/* â”€â”€â”€ HERO â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
-      <section
-        className="relative pt-32 pb-20 px-4 sm:px-6 overflow-hidden"
-        id="analyze"
-      >
-        {/* Background decoration */}
-        <div className="absolute inset-0 bg-grid opacity-30 pointer-events-none" />
-        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-indigo-600/10 rounded-full blur-3xl pointer-events-none" />
+      <main className="relative overflow-hidden">
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_15%,rgba(16,185,129,0.10),transparent_35%),radial-gradient(circle_at_80%_20%,rgba(34,211,238,0.12),transparent_32%),radial-gradient(circle_at_50%_90%,rgba(249,115,22,0.10),transparent_38%)]" />
 
-        <div className="relative max-w-4xl mx-auto text-center">
-          {/* Badge */}
-          <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4 }}
-            className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-indigo-500/30 bg-indigo-500/10 text-indigo-300 text-xs font-medium mb-6"
-          >
-            <Zap className="w-3.5 h-3.5" />
-            Google News Â· Discover Â· ChatGPT Â· Gemini Â· Perplexity
-          </motion.div>
-
-          {/* Headline */}
-          <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-            className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-white mb-5 leading-[1.1]"
-          >
-            Analyze Any Article for
-            <span className="block gradient-text-indigo">
-              Google News & AI Search
-            </span>
-          </motion.h1>
-
-          {/* Subheadline */}
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="text-lg text-white/60 max-w-2xl mx-auto mb-10"
-          >
-            Instantly check Google News eligibility, NewsArticle schema,
-            indexing readiness, Discover optimization, and AI citation potential
-            â€” free, no signup.
-          </motion.p>
-
-          {/* URL Input */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.3 }}
-            className="max-w-2xl mx-auto"
-          >
-            <div className="relative flex flex-col sm:flex-row gap-3">
-              <div className="relative flex-1">
-                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30" />
-                <input
-                  type="url"
-                  placeholder="Paste article URL... (e.g. https://techcrunch.com/...)"
-                  value={url}
-                  onChange={(e) => setUrl(e.target.value)}
-                  onKeyDown={(e) => e.key === "Enter" && handleAudit()}
-                  disabled={loading}
-                  className="w-full h-14 pl-11 pr-4 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/30 text-sm focus:outline-none focus:border-indigo-500/50 focus:bg-white/8 transition-all disabled:opacity-50"
-                />
+        <section id="analyze" className="relative px-4 pb-16 pt-28 sm:px-6 sm:pt-32">
+          <div className="mx-auto max-w-6xl">
+            <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
+              <div>
+                <p className="inline-flex items-center gap-2 rounded-full border border-emerald-400/20 bg-emerald-300/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-emerald-200">
+                  Free Google News SEO Analyzer
+                </p>
+                <h1 className="mt-5 text-4xl font-black leading-tight text-white sm:text-5xl lg:text-6xl">
+                  Analyze Any Article for Google News, Discover and AI Search
+                </h1>
+                <p className="mt-5 max-w-2xl text-base leading-relaxed text-slate-300 sm:text-lg">
+                  Instantly check whether your article is eligible for google news, optimized for google discover optimization, and ready to be cited by ChatGPT, Gemini, Claude and Perplexity.
+                </p>
               </div>
-              <button
-                onClick={handleAudit}
-                disabled={loading}
-                className="h-14 px-8 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed rounded-xl font-semibold text-white text-sm transition-all flex items-center gap-2 justify-center shrink-0"
-              >
-                {loading ? (
-                  <>
-                    <Loader2 className="w-4 h-4 animate-spin" />
-                    Analyzing...
-                  </>
-                ) : (
-                  <>
-                    <Search className="w-4 h-4" />
-                    Analyze Free
-                  </>
-                )}
-              </button>
+
+              <div className="rounded-3xl border border-white/10 bg-[#071b23]/90 p-5 shadow-2xl shadow-black/30 sm:p-6">
+                <label htmlFor="homepage-article-url" className="text-xs font-semibold uppercase tracking-[0.12em] text-cyan-200">Paste article URL</label>
+                <div className="mt-3 flex flex-col gap-3 sm:flex-row">
+                  <div className="relative flex-1">
+                    <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+                    <input
+                      id="homepage-article-url"
+                      type="url"
+                      value={url}
+                      onChange={(event) => setUrl(event.target.value)}
+                      placeholder="https://yournewsdomain.com/article"
+                      className="h-12 w-full rounded-xl border border-white/10 bg-black/20 pl-10 pr-3 text-sm text-white placeholder:text-slate-500 focus:border-cyan-300/60 focus:outline-none"
+                    />
+                  </div>
+                  <button
+                    type="button"
+                    onClick={handleAudit}
+                    disabled={loading}
+                    className="inline-flex h-12 min-w-36 items-center justify-center gap-2 rounded-xl bg-cyan-300 px-5 text-sm font-bold text-slate-900 transition hover:bg-cyan-200 disabled:cursor-not-allowed disabled:opacity-60"
+                  >
+                    {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Zap className="h-4 w-4" />}
+                    {loading ? "Analyzing" : "Analyze Free"}
+                  </button>
+                </div>
+
+                <p className="mt-3 text-xs text-slate-300">{remainingLabel}</p>
+
+                <div className="mt-4 grid grid-cols-2 gap-2 text-xs text-slate-200 sm:grid-cols-4">
+                  {[
+                    "No Login Required",
+                    "Free Forever",
+                    "5 Analyses Per Day",
+                    "Results In Seconds",
+                  ].map((item) => (
+                    <span key={item} className="inline-flex items-center gap-1 rounded-md border border-emerald-300/20 bg-emerald-300/10 px-2 py-1">
+                      <CheckCircle2 className="h-3.5 w-3.5 text-emerald-300" />
+                      {item}
+                    </span>
+                  ))}
+                </div>
+
+                {error && <p className="mt-4 rounded-lg border border-red-400/30 bg-red-500/10 px-3 py-2 text-sm text-red-200">{error}</p>}
+              </div>
             </div>
+          </div>
+        </section>
 
-            {/* Error */}
-            <AnimatePresence>
-              {error && (
-                <motion.div
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: "auto" }}
-                  exit={{ opacity: 0, height: 0 }}
-                  className="mt-3 px-4 py-3 bg-red-500/10 border border-red-500/20 rounded-lg text-sm text-red-400"
-                >
-                  {error}
-                </motion.div>
-              )}
-            </AnimatePresence>
-
-            {/* Trust signals */}
-            <div className="flex items-center justify-center gap-6 mt-5 text-xs text-white/40">
-              {[
-                "No signup required",
-                "5 analyses daily",
-                "Results in seconds",
-              ].map((t) => (
-                <span key={t} className="flex items-center gap-1.5">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-green-500" />
-                  {t}
-                </span>
+        <section className="border-t border-white/5 px-4 py-14 sm:px-6">
+          <div className="mx-auto max-w-6xl">
+            <h2 className="text-2xl font-bold text-white sm:text-3xl">Why Your Article Is Not Appearing In Google News</h2>
+            <p className="mt-3 max-w-3xl text-slate-300">
+              Most publishers do not fail because of one major issue. They lose visibility through several small misses across google news requirements, entity trust, and technical consistency.
+            </p>
+            <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+              {WHY_NOT_IN_NEWS.map((issue) => (
+                <div key={issue} className="rounded-2xl border border-white/10 bg-white/5 p-4 text-sm text-slate-200">
+                  <p className="inline-flex items-center gap-2">
+                    <AlertCircle className="h-4 w-4 text-amber-300" />
+                    {issue}
+                  </p>
+                </div>
               ))}
             </div>
-          </motion.div>
-        </div>
-      </section>
+          </div>
+        </section>
 
-      {/* â”€â”€â”€ REAL RESULTS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
-      <AnimatePresence>
-        {auditReport && (
-          <motion.section
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.5 }}
-            className="px-4 sm:px-6 pb-16"
-          >
-            <div className="max-w-5xl mx-auto space-y-6">
-              {/* Score overview */}
-              <div className="card-surface p-6">
-                <div className="flex items-center justify-between mb-6">
-                  <div>
-                    <h2 className="text-lg font-semibold text-white">
-                      Article Analysis Results
-                    </h2>
-                    <p className="text-sm text-white/50 mt-0.5 truncate max-w-sm">
-                      {auditReport.url}
-                    </p>
+        <section className="border-t border-white/5 px-4 py-14 sm:px-6">
+          <div className="mx-auto max-w-6xl">
+            <h2 className="text-2xl font-bold text-white sm:text-3xl">What We Analyze</h2>
+            <p className="mt-3 max-w-3xl text-slate-300">
+              The scoring engine combines google news validator checks, discover signals, and ai search optimization factors into a single action plan.
+            </p>
+            <div className="mt-8 grid gap-4 md:grid-cols-2">
+              {ANALYSIS_AREAS.map((item) => (
+                <article key={item.title} className="rounded-2xl border border-white/10 bg-white/5 p-5">
+                  <div className="flex items-center gap-3">
+                    <div className="rounded-xl bg-cyan-300/15 p-2.5">
+                      <item.icon className="h-5 w-5 text-cyan-200" />
+                    </div>
+                    <div>
+                      <h3 className="text-lg font-semibold text-white">{item.title}</h3>
+                      <p className="text-xs uppercase tracking-widest text-cyan-200">{item.keyword}</p>
+                    </div>
                   </div>
-                  <span className="text-xs px-3 py-1 bg-green-500/10 text-green-400 border border-green-500/20 rounded-full">
-                    Analysis Complete
-                  </span>
+                  <p className="mt-3 text-sm leading-relaxed text-slate-300">{item.text}</p>
+                </article>
+              ))}
+            </div>
+
+            <div className="mt-8 rounded-2xl border border-emerald-300/20 bg-emerald-300/10 p-5">
+              <h3 className="text-lg font-semibold text-white">How Scoring Works and Why This Matters</h3>
+              <p className="mt-2 text-sm leading-relaxed text-emerald-50/90">
+                Scores are weighted by crawlability, structured data validity, publication trust signals, and citation readiness. Every score card includes actionable fixes so you never see a score without a next step.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <section className="border-t border-white/5 px-4 py-14 sm:px-6">
+          <div className="mx-auto max-w-6xl">
+            <h2 className="text-2xl font-bold text-white sm:text-3xl">Live Example Report</h2>
+            <p className="mt-3 max-w-3xl text-slate-300">A clear report format with score transparency, methodology context, and precise fixes.</p>
+
+            <div className="mt-8 rounded-3xl border border-white/10 bg-[#081f28]/90 p-5 sm:p-6">
+              <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+                {scores.map((score) => (
+                  <div key={score.label} className="rounded-xl border border-white/10 bg-black/20 p-4 text-center">
+                    <p className={`text-3xl font-black ${getScoreColor(score.value)}`}>{score.value}</p>
+                    <p className="mt-2 text-xs text-slate-300">{score.label}</p>
+                    <Progress value={score.value} className="mt-2 h-1.5" />
+                  </div>
+                ))}
+              </div>
+
+              <div className="mt-6 grid gap-4 lg:grid-cols-2">
+                <div className="rounded-xl border border-white/10 bg-white/5 p-4">
+                  <div className="mb-3 flex items-center justify-between">
+                    <h3 className="font-semibold text-white">Key Validation Signals</h3>
+                    <StatusIcon status={auditReport?.googleNewsAudit.status ?? "WARNING"} />
+                  </div>
+                  <ul className="space-y-2 text-sm text-slate-200">
+                    <li className="flex items-center justify-between"><span>NewsArticle schema</span><span className="text-emerald-300">Pass</span></li>
+                    <li className="flex items-center justify-between"><span>Author transparency</span><span className="text-amber-300">Warning</span></li>
+                    <li className="flex items-center justify-between"><span>Entity coverage</span><span className="text-cyan-200">Strong</span></li>
+                    <li className="flex items-center justify-between"><span>AI citation readiness</span><span className="text-emerald-300">Pass</span></li>
+                  </ul>
                 </div>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  {[
-                    {
-                      label: "Overall Score",
-                      value: auditReport.overallScore,
-                      color: "indigo",
-                    },
-                    {
-                      label: "Google News",
-                      value: auditReport.googleNewsScore,
-                      color: "green",
-                    },
-                    {
-                      label: "AI Citation",
-                      value: auditReport.aiSearchScore,
-                      color: "blue",
-                    },
-                    {
-                      label: "Schema",
-                      value: auditReport.schemaScore,
-                      color: "purple",
-                    },
-                  ].map((s) => (
-                    <div
-                      key={s.label}
-                      className="text-center p-4 bg-white/3 rounded-xl border border-white/5"
-                    >
-                      <div
-                        className={`text-3xl font-bold mb-1 ${getScoreColor(s.value)}`}
+
+                <div className="rounded-xl border border-white/10 bg-white/5 p-4">
+                  <h3 className="font-semibold text-white">Actionable Recommendations</h3>
+                  <ul className="mt-3 space-y-2 text-sm text-slate-200">
+                    {(auditReport?.recommendations.slice(0, 4) ?? [
+                      { title: "Add detailed author page links", action: "Link each byline to a credential-rich author page." },
+                      { title: "Increase image resolution", action: "Use at least one 1200px-wide image for discover eligibility." },
+                      { title: "Expand entity context", action: "Include named entities and factual references for llm optimization." },
+                      { title: "Strengthen publisher schema", action: "Add Organization + logo + sameAs profile links." },
+                    ]).map((item, index) => (
+                      <li key={`${item.title}-${index}`} className="rounded-lg border border-white/10 bg-black/20 p-3">
+                        <p className="font-medium text-white">{item.title}</p>
+                        <p className="mt-1 text-slate-300">{"action" in item ? item.action : "Apply recommended fixes to improve score."}</p>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="border-t border-white/5 px-4 py-14 sm:px-6">
+          <div className="mx-auto max-w-6xl">
+            <h2 className="text-2xl font-bold text-white sm:text-3xl">Google News Requirements Checklist</h2>
+            <div className="mt-6 space-y-3">
+              {GOOGLE_NEWS_CHECKLIST.map((item) => (
+                <details key={item} className="group rounded-2xl border border-white/10 bg-white/5 p-4">
+                  <summary className="flex cursor-pointer list-none items-center justify-between gap-4 text-sm font-medium text-white">
+                    <span className="inline-flex items-center gap-2"><Check className="h-4 w-4 text-emerald-300" />{item}</span>
+                    <ChevronDown className="h-4 w-4 text-slate-300 transition group-open:rotate-180" />
+                  </summary>
+                  <p className="mt-3 text-sm leading-relaxed text-slate-300">
+                    This requirement directly impacts google news seo performance and should be validated for each published URL.
+                  </p>
+                </details>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="border-t border-white/5 px-4 py-14 sm:px-6">
+          <div className="mx-auto max-w-6xl">
+            <h2 className="text-2xl font-bold text-white sm:text-3xl">Will AI Search Cite Your Article?</h2>
+            <p className="mt-3 max-w-3xl text-slate-300">
+              We evaluate entity coverage, EEAT signals, structured data quality, author trust, and citation readiness across modern answer engines.
+            </p>
+            <div className="mt-6 grid gap-4 md:grid-cols-2">
+              {AI_CHECKLIST.map((engine) => (
+                <article key={engine.engine} className="rounded-2xl border border-white/10 bg-white/5 p-5">
+                  <h3 className="text-lg font-semibold text-white">{engine.engine} Optimization Checklist</h3>
+                  <ul className="mt-3 space-y-2 text-sm text-slate-200">
+                    {engine.points.map((point) => (
+                      <li key={point} className="inline-flex items-start gap-2">
+                        <Sparkles className="mt-0.5 h-4 w-4 text-cyan-200" />
+                        {point}
+                      </li>
+                    ))}
+                  </ul>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="border-t border-white/5 px-4 py-14 sm:px-6">
+          <div className="mx-auto max-w-6xl">
+            <h2 className="text-2xl font-bold text-white sm:text-3xl">Feature Comparison</h2>
+            <div className="mt-6 overflow-hidden rounded-2xl border border-white/10">
+              <table className="w-full border-collapse text-left text-sm">
+                <thead>
+                  <tr className="bg-white/5 text-slate-200">
+                    <th className="px-4 py-3 font-semibold">Category</th>
+                    <th className="px-4 py-3 font-semibold">Manual Audit</th>
+                    <th className="px-4 py-3 font-semibold">Google News SEO Toolkit</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {MANUAL_VS_TOOLKIT.map((row) => (
+                    <tr key={row[0]} className="border-t border-white/10 text-slate-200">
+                      <td className="px-4 py-3">{row[0]}</td>
+                      <td className="px-4 py-3 text-slate-300">{row[1]}</td>
+                      <td className="px-4 py-3 text-emerald-200">{row[2]}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <section className="border-t border-white/5 px-4 py-14 sm:px-6">
+          <div className="mx-auto max-w-5xl">
+            <h2 className="text-2xl font-bold text-white sm:text-3xl">FAQ</h2>
+            <div className="mt-6 space-y-3">
+              {FAQS.map((faq) => (
+                <details key={faq.q} className="group rounded-2xl border border-white/10 bg-white/5 p-4">
+                  <summary className="flex cursor-pointer list-none items-center justify-between gap-4 font-medium text-white">
+                    <span>{faq.q}</span>
+                    <ChevronDown className="h-4 w-4 text-slate-300 transition group-open:rotate-180" />
+                  </summary>
+                  <p className="mt-3 text-sm leading-relaxed text-slate-300">{faq.a}</p>
+                </details>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section id="newsletter" className="border-t border-white/5 px-4 py-16 sm:px-6">
+          <div className="mx-auto max-w-6xl rounded-3xl border border-cyan-300/20 bg-cyan-300/10 p-6 sm:p-8">
+            <div className="grid gap-8 lg:grid-cols-2 lg:items-start">
+              <div>
+                <h2 className="text-2xl font-bold text-white sm:text-3xl">Newsletter Signup and Early Access Waitlist</h2>
+                <p className="mt-3 text-sm leading-relaxed text-cyan-50/90">
+                  Get weekly Google News SEO, chatgpt seo, gemini seo, perplexity seo, and geo optimization updates. Join early access to influence product direction.
+                </p>
+                <form onSubmit={handleWaitlistSubmit} className="mt-5 flex flex-col gap-3 sm:flex-row">
+                  <div className="relative flex-1">
+                    <Mail className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
+                    <input
+                      type="email"
+                      required
+                      value={waitlistEmail}
+                      onChange={(event) => setWaitlistEmail(event.target.value)}
+                      placeholder="you@publication.com"
+                      className="h-11 w-full rounded-xl border border-white/20 bg-black/20 pl-9 pr-3 text-sm text-white placeholder:text-slate-400 focus:border-cyan-100 focus:outline-none"
+                    />
+                  </div>
+                  <button
+                    type="submit"
+                    disabled={waitlistLoading}
+                    className="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-white px-5 text-sm font-bold text-slate-900 transition hover:bg-slate-100 disabled:opacity-70"
+                  >
+                    {waitlistLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
+                    {waitlistLoading ? "Submitting" : "Join Waitlist"}
+                  </button>
+                </form>
+                {waitlistSuccess && <p className="mt-3 text-sm text-emerald-200">You are on the list. We will share early access updates soon.</p>}
+              </div>
+
+              <div>
+                <h3 className="text-lg font-semibold text-white">Feature Voting</h3>
+                <p className="mt-2 text-sm text-cyan-50/90">Vote for the next feature release. We prioritize by market demand.</p>
+                <div className="mt-4 space-y-2">
+                  {VOTING_FEATURES.map((feature) => (
+                    <div key={feature.id} className="flex items-center justify-between rounded-xl border border-white/15 bg-black/20 p-3">
+                      <p className="text-sm text-white">{feature.title}</p>
+                      <button
+                        type="button"
+                        onClick={() => handleVote(feature.id)}
+                        className={`inline-flex items-center gap-1 rounded-md px-2.5 py-1 text-xs font-semibold ${votes[feature.id] ? "bg-emerald-300/20 text-emerald-100" : "bg-white/15 text-white hover:bg-white/25"}`}
                       >
-                        {s.value}
-                      </div>
-                      <div className="text-xs text-white/50">{s.label}</div>
-                      <Progress value={s.value} className="mt-2 h-1" />
+                        <ThumbsUp className="h-3.5 w-3.5" />
+                        {feature.baseVotes + (votes[feature.id] || 0)}
+                      </button>
                     </div>
                   ))}
                 </div>
               </div>
-
-              {/* Detail cards */}
-              <div className="grid md:grid-cols-2 gap-4">
-                {/* Google News */}
-                <div className="card-surface p-5">
-                  <div className="flex items-center justify-between mb-4">
-                    <h3 className="font-semibold text-white flex items-center gap-2">
-                      <Newspaper className="w-4 h-4 text-green-400" />
-                      Google News
-                    </h3>
-                    <StatusIcon status={auditReport.googleNewsAudit.status} />
-                  </div>
-                  <div className="space-y-2.5">
-                    {[
-                      {
-                        label: "NewsArticle Schema",
-                        value: auditReport.googleNewsAudit.hasNewsArticleSchema,
-                      },
-                      {
-                        label: "Author",
-                        value: !!auditReport.googleNewsAudit.author,
-                      },
-                      {
-                        label: "Publisher",
-                        value: !!auditReport.googleNewsAudit.publisher,
-                      },
-                    ].map((item) => (
-                      <div
-                        key={item.label}
-                        className="flex items-center justify-between text-sm"
-                      >
-                        <span className="text-white/60">{item.label}</span>
-                        <span
-                          className={
-                            item.value ? "text-green-400" : "text-red-400"
-                          }
-                        >
-                          {item.value ? "âœ“ Pass" : "âœ— Missing"}
-                        </span>
-                      </div>
-                    ))}
-                    {auditReport.googleNewsAudit.issues
-                      .slice(0, 3)
-                      .map((issue, i) => (
-                        <p
-                          key={i}
-                          className="text-xs text-yellow-400/80 bg-yellow-500/5 px-3 py-2 rounded-lg border border-yellow-500/10"
-                        >
-                          âš  {issue}
-                        </p>
-                      ))}
-                  </div>
-                </div>
-
-                {/* AI Search */}
-                <div className="card-surface p-5">
-                  <div className="flex items-center justify-between mb-4">
-                    <h3 className="font-semibold text-white flex items-center gap-2">
-                      <Bot className="w-4 h-4 text-indigo-400" />
-                      AI Citation Readiness
-                    </h3>
-                    <StatusIcon status={auditReport.aiSearchAudit.status} />
-                  </div>
-                  <div className="space-y-2.5">
-                    {[
-                      {
-                        label: "FAQ Schema",
-                        value: auditReport.aiSearchAudit.hasFAQSchema,
-                      },
-                      {
-                        label: "llms.txt",
-                        value: auditReport.aiSearchAudit.hasLlmsTxt,
-                      },
-                      {
-                        label: "ai.txt",
-                        value: auditReport.aiSearchAudit.hasAiTxt,
-                      },
-                    ].map((item) => (
-                      <div
-                        key={item.label}
-                        className="flex items-center justify-between text-sm"
-                      >
-                        <span className="text-white/60">{item.label}</span>
-                        <span
-                          className={
-                            item.value ? "text-green-400" : "text-red-400"
-                          }
-                        >
-                          {item.value ? "âœ“ Pass" : "âœ— Missing"}
-                        </span>
-                      </div>
-                    ))}
-                    <div className="mt-1">
-                      <div className="flex items-center justify-between text-sm mb-1">
-                        <span className="text-white/60">
-                          Schema Completeness
-                        </span>
-                        <span className="text-white/80">
-                          {auditReport.aiSearchAudit.schemaCompleteness}%
-                        </span>
-                      </div>
-                      <Progress
-                        value={auditReport.aiSearchAudit.schemaCompleteness}
-                        className="h-1.5"
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                {/* Schema */}
-                <div className="card-surface p-5">
-                  <div className="flex items-center justify-between mb-4">
-                    <h3 className="font-semibold text-white flex items-center gap-2">
-                      <FileCode className="w-4 h-4 text-purple-400" />
-                      Schema Validation
-                    </h3>
-                    <StatusIcon status={auditReport.schemaValidation.status} />
-                  </div>
-                  <div className="space-y-2.5">
-                    {(
-                      [
-                        "Organization",
-                        "Article",
-                        "NewsArticle",
-                        "Website",
-                        "Breadcrumb",
-                      ] as const
-                    ).map((schema) => {
-                      const key =
-                        `has${schema}` as keyof typeof auditReport.schemaValidation;
-                      const has = auditReport.schemaValidation[key];
-                      return (
-                        <div
-                          key={schema}
-                          className="flex items-center justify-between text-sm"
-                        >
-                          <span className="text-white/60">{schema} Schema</span>
-                          <span
-                            className={has ? "text-green-400" : "text-white/20"}
-                          >
-                            {has ? "âœ“" : "â€”"}
-                          </span>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-
-                {/* SEO Meta */}
-                <div className="card-surface p-5">
-                  <div className="flex items-center justify-between mb-4">
-                    <h3 className="font-semibold text-white flex items-center gap-2">
-                      <Search className="w-4 h-4 text-blue-400" />
-                      SEO Meta
-                    </h3>
-                    <StatusIcon status={auditReport.seoAudit.meta.status} />
-                  </div>
-                  <div className="space-y-2.5">
-                    <div>
-                      <p className="text-xs text-white/40 mb-1">Title</p>
-                      <p className="text-sm text-white/80 truncate">
-                        {auditReport.seoAudit.meta.data.title || (
-                          <span className="text-red-400">Missing</span>
-                        )}
-                      </p>
-                    </div>
-                    <div>
-                      <p className="text-xs text-white/40 mb-1">Description</p>
-                      <p className="text-sm text-white/80 line-clamp-2">
-                        {auditReport.seoAudit.meta.data.description || (
-                          <span className="text-red-400">Missing</span>
-                        )}
-                      </p>
-                    </div>
-                    {auditReport.seoAudit.meta.issues
-                      .slice(0, 2)
-                      .map((issue, i) => (
-                        <p
-                          key={i}
-                          className="text-xs text-yellow-400/80 bg-yellow-500/5 px-3 py-2 rounded-lg border border-yellow-500/10"
-                        >
-                          âš  {issue}
-                        </p>
-                      ))}
-                  </div>
-                </div>
-              </div>
-
-              {/* Recommendations */}
-              {auditReport.recommendations.length > 0 && (
-                <div className="card-surface p-6">
-                  <h3 className="font-semibold text-white mb-4 flex items-center gap-2">
-                    <Zap className="w-4 h-4 text-yellow-400" />
-                    Recommendations
-                  </h3>
-                  <div className="space-y-3">
-                    {auditReport.recommendations.slice(0, 8).map((rec, i) => (
-                      <div
-                        key={i}
-                        className="flex gap-4 p-4 bg-white/3 rounded-xl border border-white/5"
-                      >
-                        <span
-                          className={`shrink-0 text-xs px-2 py-1 rounded font-medium h-fit mt-0.5 border ${
-                            rec.priority === "HIGH"
-                              ? "bg-red-500/10 text-red-400 border-red-500/20"
-                              : rec.priority === "MEDIUM"
-                                ? "bg-yellow-500/10 text-yellow-400 border-yellow-500/20"
-                                : "bg-blue-500/10 text-blue-400 border-blue-500/20"
-                          }`}
-                        >
-                          {rec.priority}
-                        </span>
-                        <div>
-                          <p className="font-medium text-white text-sm">
-                            {rec.title}
-                          </p>
-                          <p className="text-xs text-white/50 mt-0.5">
-                            {rec.description}
-                          </p>
-                          <p className="text-xs text-indigo-400 mt-1.5">
-                            â†’ {rec.action}
-                          </p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
             </div>
-          </motion.section>
-        )}
-      </AnimatePresence>
-
-      {/* â”€â”€â”€ MOCK RESULTS PREVIEW (shown only when no real results) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
-      {!auditReport && !loading && (
-        <section className="px-4 sm:px-6 pb-20">
-          <div className="max-w-4xl mx-auto">
-            <div className="text-center mb-8">
-              <p className="text-sm text-white/40 uppercase tracking-widest font-medium">
-                Example Output
-              </p>
-              <h2 className="text-xl font-semibold text-white mt-2">
-                Here&apos;s what your results will look like
-              </h2>
-            </div>
-
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.4 }}
-              className="card-surface p-6 sm:p-8 relative overflow-hidden"
-            >
-              {/* Blur overlay on bottom to hint at more content */}
-              <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-[#0a0a0a] to-transparent pointer-events-none z-10" />
-
-              <div className="flex items-center gap-3 mb-6 pb-5 border-b border-white/5">
-                <div className="w-8 h-8 rounded-full bg-indigo-500/20 flex items-center justify-center">
-                  <Newspaper className="w-4 h-4 text-indigo-400" />
-                </div>
-                <div>
-                  <p className="text-sm font-medium text-white">
-                    techcrunch.com/2024/example-article
-                  </p>
-                  <p className="text-xs text-white/40">
-                    Analysis completed in 1.2s
-                  </p>
-                </div>
-                <span className="ml-auto text-xs px-3 py-1 bg-green-500/10 text-green-400 border border-green-500/20 rounded-full">
-                  Analysis Complete
-                </span>
-              </div>
-
-              {/* Score cards */}
-              <div className="grid grid-cols-3 gap-4 mb-6">
-                {[
-                  {
-                    label: "Google News Score",
-                    value: 92,
-                    color: "text-green-400",
-                  },
-                  {
-                    label: "AI Citation Score",
-                    value: 88,
-                    color: "text-indigo-400",
-                  },
-                  {
-                    label: "Discover Readiness",
-                    value: 85,
-                    color: "text-blue-400",
-                  },
-                ].map((s) => (
-                  <div
-                    key={s.label}
-                    className="text-center p-4 bg-white/3 rounded-xl border border-white/5"
-                  >
-                    <div className={`text-3xl font-bold ${s.color}`}>
-                      {s.value}
-                    </div>
-                    <div className="text-xs text-white/40 mt-1">/ 100</div>
-                    <div className="text-xs text-white/60 mt-2">{s.label}</div>
-                    <Progress value={s.value} className="mt-2 h-1" />
-                  </div>
-                ))}
-              </div>
-
-              {/* Checks */}
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                {[
-                  { label: "NewsArticle Schema", pass: true },
-                  { label: "Author Byline", pass: true },
-                  { label: "Canonical URL", pass: true },
-                  { label: "Indexable", pass: true },
-                  { label: "Publisher Logo", pass: false, warn: true },
-                  { label: "FAQ Schema", pass: false },
-                ].map((c) => (
-                  <div
-                    key={c.label}
-                    className={`flex items-center gap-2 px-3 py-2 rounded-lg border text-xs ${
-                      c.pass
-                        ? "bg-green-500/5 border-green-500/15 text-green-400"
-                        : c.warn
-                          ? "bg-yellow-500/5 border-yellow-500/15 text-yellow-400"
-                          : "bg-red-500/5 border-red-500/15 text-red-400"
-                    }`}
-                  >
-                    {c.pass ? (
-                      <CheckCircle2 className="w-3.5 h-3.5 shrink-0" />
-                    ) : c.warn ? (
-                      <AlertCircle className="w-3.5 h-3.5 shrink-0" />
-                    ) : (
-                      <XCircle className="w-3.5 h-3.5 shrink-0" />
-                    )}
-                    {c.label}
-                  </div>
-                ))}
-              </div>
-            </motion.div>
           </div>
         </section>
-      )}
 
-      {/* â”€â”€â”€ WHO IS THIS FOR â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
-      <section className="px-4 sm:px-6 py-20 border-t border-white/5">
-        <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-12">
-            <p className="text-xs font-semibold uppercase tracking-widest text-indigo-400 mb-3">
-              Designed For
-            </p>
-            <h2 className="text-3xl font-bold text-white">
-              Built for the people behind the news
-            </h2>
-            <p className="text-white/50 mt-3 max-w-xl mx-auto">
-              Whether you run a single blog or a global newsroom, this toolkit
-              helps you reach more readers through Google News and AI search.
-            </p>
-          </div>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3">
-            {AUDIENCE.map((a) => (
-              <div
-                key={a.label}
-                className="card-surface flex flex-col items-center gap-3 py-6 px-4 rounded-xl hover:border-indigo-500/20 transition-all cursor-default"
-              >
-                <div className="w-10 h-10 rounded-xl bg-indigo-500/10 flex items-center justify-center">
-                  <a.icon className="w-5 h-5 text-indigo-400" />
-                </div>
-                <span className="text-sm font-medium text-white/80">
-                  {a.label}
-                </span>
-              </div>
-            ))}
-          </div>
+        <div className="fixed bottom-4 right-4 z-40">
+          <button
+            type="button"
+            onClick={() => {
+              document.getElementById("analyze")?.scrollIntoView({ behavior: "smooth", block: "start" });
+            }}
+            className="inline-flex items-center gap-2 rounded-full border border-cyan-300/50 bg-cyan-300 px-4 py-2 text-sm font-bold text-slate-900 shadow-xl shadow-black/20"
+          >
+            <Search className="h-4 w-4" />
+            Analyze Free
+          </button>
         </div>
-      </section>
 
-      {/* â”€â”€â”€ WHY DIFFERENT â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
-      <section className="px-4 sm:px-6 py-20 border-t border-white/5">
-        <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-12">
-            <p className="text-xs font-semibold uppercase tracking-widest text-indigo-400 mb-3">
-              Why This Is Different
-            </p>
-            <h2 className="text-3xl font-bold text-white">
-              Not another generic SEO tool
-            </h2>
-            <p className="text-white/50 mt-3 max-w-xl mx-auto">
-              Traditional SEO tools were built for bloggers and e-commerce.
-              We&apos;re built exclusively for publishers and news media.
-            </p>
-          </div>
-
-          <div className="card-surface overflow-hidden rounded-2xl">
-            <div className="grid grid-cols-3 text-sm">
-              {/* Header */}
-              <div className="p-5 bg-white/2 border-b border-r border-white/5">
-                <p className="font-semibold text-white/50">Feature</p>
-              </div>
-              <div className="p-5 bg-white/2 border-b border-r border-white/5 text-center">
-                <p className="font-semibold text-white/50">
-                  Traditional SEO Tools
-                </p>
-              </div>
-              <div className="p-5 bg-indigo-500/5 border-b border-white/5 text-center">
-                <p className="font-semibold text-indigo-300">
-                  Google News SEO Toolkit
-                </p>
-              </div>
-
-              {/* Rows */}
-              {[
-                ["Google News Eligibility Check", false, true],
-                ["NewsArticle Schema Validation", false, true],
-                ["Discover Readiness Score", false, true],
-                ["AI Citation Readiness", false, true],
-                ["Publisher Optimization", false, true],
-                ["News Sitemap Validation", false, true],
-                ["Keyword Rankings", true, false],
-                ["Backlink Analysis", true, false],
-              ].map(([feature, trad, ours], i) => (
-                <>
-                  <div
-                    key={`f-${i}`}
-                    className={`p-4 border-b border-r border-white/5 flex items-center ${i === 5 ? "" : ""}`}
-                  >
-                    <span className="text-white/70 text-sm">
-                      {feature as string}
-                    </span>
-                  </div>
-                  <div
-                    key={`t-${i}`}
-                    className="p-4 border-b border-r border-white/5 flex items-center justify-center"
-                  >
-                    {trad ? (
-                      <Check className="w-4 h-4 text-white/30" />
-                    ) : (
-                      <XIcon className="w-4 h-4 text-white/15" />
-                    )}
-                  </div>
-                  <div
-                    key={`o-${i}`}
-                    className={`p-4 border-b border-white/5 flex items-center justify-center bg-indigo-500/3`}
-                  >
-                    {ours ? (
-                      <Check className="w-4 h-4 text-indigo-400" />
-                    ) : (
-                      <XIcon className="w-4 h-4 text-white/15" />
-                    )}
-                  </div>
-                </>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* â”€â”€â”€ CORE FEATURES â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
-      <section
-        className="px-4 sm:px-6 py-20 border-t border-white/5"
-        id="tools"
-      >
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-12">
-            <p className="text-xs font-semibold uppercase tracking-widest text-indigo-400 mb-3">
-              Free Tools
-            </p>
-            <h2 className="text-3xl font-bold text-white">
-              Everything a news publisher needs
-            </h2>
-            <p className="text-white/50 mt-3 max-w-xl mx-auto">
-              Six specialized tools to audit, validate, and optimize your
-              articles for Google News and AI search.
-            </p>
-          </div>
-
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {FEATURES.map((f) => (
-              <Link
-                key={f.href}
-                href={f.href}
-                onClick={() => track("tool_click", { tool: f.href })}
-                className="card-surface group p-6 rounded-2xl hover:border-indigo-500/25 transition-all"
-              >
-                <div className="flex items-start justify-between mb-4">
-                  <div className="w-10 h-10 rounded-xl bg-white/5 group-hover:bg-indigo-500/10 flex items-center justify-center transition-colors">
-                    <f.icon className="w-5 h-5 text-white/60 group-hover:text-indigo-400 transition-colors" />
-                  </div>
-                  <span
-                    className={`text-xs px-2.5 py-1 rounded-full border font-medium ${f.badgeColor}`}
-                  >
-                    {f.badge}
-                  </span>
-                </div>
-                <h3 className="font-semibold text-white mb-2 group-hover:text-indigo-200 transition-colors">
-                  {f.title}
-                </h3>
-                <p className="text-sm text-white/50 leading-relaxed">
-                  {f.desc}
-                </p>
-                <div className="mt-4 flex items-center text-xs text-indigo-400 opacity-0 group-hover:opacity-100 transition-opacity">
-                  Try it free <ArrowRight className="w-3 h-3 ml-1" />
-                </div>
-              </Link>
-            ))}
-          </div>
-
-          <div className="text-center mt-8">
-            <Link
-              href="/news-seo-checker"
-              className="inline-flex items-center gap-2 text-sm text-white/50 hover:text-white border border-white/10 hover:border-white/20 rounded-lg px-5 py-2.5 transition-all"
-            >
-              View All Tools <ChevronRight className="w-4 h-4" />
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* â”€â”€â”€ ROADMAP â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
-      <section
-        className="px-4 sm:px-6 py-20 border-t border-white/5"
-        id="roadmap"
-      >
-        <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-12">
-            <p className="text-xs font-semibold uppercase tracking-widest text-indigo-400 mb-3">
-              Roadmap
-            </p>
-            <h2 className="text-3xl font-bold text-white">Coming Soon</h2>
-            <p className="text-white/50 mt-3 max-w-xl mx-auto">
-              Vote for the features you need most. We build based on real
-              demand.
-            </p>
-          </div>
-
-          <div className="grid sm:grid-cols-2 gap-4">
-            {ROADMAP.map((item) => (
-              <div
-                key={item.id}
-                className="card-surface p-5 rounded-2xl flex items-start gap-4"
-              >
-                <div className="flex-1">
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className="text-xs px-2 py-0.5 bg-white/5 text-white/50 border border-white/8 rounded-full">
-                      Coming Soon
-                    </span>
-                  </div>
-                  <h3 className="font-semibold text-white mt-2">
-                    {item.title}
-                  </h3>
-                  <p className="text-sm text-white/50 mt-1">{item.desc}</p>
+        {exitOpen && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
+            <div className="w-full max-w-md rounded-2xl border border-white/15 bg-[#082029] p-6">
+              <div className="flex items-start justify-between gap-3">
+                <div>
+                  <h3 className="text-xl font-bold text-white">Before You Leave</h3>
+                  <p className="mt-2 text-sm text-slate-300">Run one free google news checker audit now. No login required.</p>
                 </div>
                 <button
-                  onClick={() => handleVote(item.id)}
-                  className={`shrink-0 flex flex-col items-center gap-1 px-3 py-2 rounded-xl border transition-all text-sm font-medium ${
-                    votes[item.id]
-                      ? "bg-indigo-500/15 border-indigo-500/30 text-indigo-300"
-                      : "bg-white/3 border-white/8 text-white/50 hover:bg-white/8 hover:text-white"
-                  }`}
-                  aria-label={`Vote for ${item.title}`}
+                  type="button"
+                  onClick={() => setExitOpen(false)}
+                  className="rounded-md p-1 text-slate-300 hover:bg-white/10 hover:text-white"
                 >
-                  <ThumbsUp className="w-4 h-4" />
-                  <span>{item.votes + (votes[item.id] || 0)}</span>
+                  <X className="h-4 w-4" />
                 </button>
               </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* â”€â”€â”€ WAITLIST â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
-      <section
-        className="px-4 sm:px-6 py-20 border-t border-white/5"
-        id="waitlist"
-      >
-        <div className="max-w-xl mx-auto text-center">
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-indigo-500/30 bg-indigo-500/10 text-indigo-300 text-xs font-medium mb-6">
-            <Star className="w-3.5 h-3.5" />
-            Early Access Limited Spots
-          </div>
-          <h2 className="text-3xl font-bold text-white mb-3">
-            Join Early Access
-          </h2>
-          <p className="text-white/50 mb-10">
-            Be first to access monitoring, bulk analysis, and the full publisher
-            dashboard. Free for early members.
-          </p>
-
-          {wSuccess ? (
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              className="card-surface p-8 rounded-2xl text-center"
-            >
-              <CheckCircle2 className="w-12 h-12 text-green-400 mx-auto mb-4" />
-              <h3 className="text-lg font-semibold text-white mb-2">
-                You&apos;re on the list!
-              </h3>
-              <p className="text-white/50 text-sm">
-                We&apos;ll notify you when your feature is ready. Thank you for
-                your interest.
-              </p>
-            </motion.div>
-          ) : (
-            <form
-              onSubmit={handleWaitlist}
-              className="card-surface p-6 sm:p-8 rounded-2xl space-y-4"
-            >
-              <div>
-                <label className="block text-sm font-medium text-white/70 mb-2 text-left">
-                  Name
-                </label>
-                <input
-                  type="text"
-                  placeholder="Your name"
-                  value={wName}
-                  onChange={(e) => setWName(e.target.value)}
-                  className="w-full h-11 px-4 bg-white/5 border border-white/10 rounded-lg text-white placeholder-white/30 text-sm focus:outline-none focus:border-indigo-500/50 transition-all"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-white/70 mb-2 text-left">
-                  Email <span className="text-red-400">*</span>
-                </label>
-                <input
-                  type="email"
-                  placeholder="you@yourpublication.com"
-                  value={wEmail}
-                  onChange={(e) => setWEmail(e.target.value)}
-                  required
-                  className="w-full h-11 px-4 bg-white/5 border border-white/10 rounded-lg text-white placeholder-white/30 text-sm focus:outline-none focus:border-indigo-500/50 transition-all"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-white/70 mb-2 text-left">
-                  Which feature would help you most?
-                </label>
-                <select
-                  value={wFeature}
-                  onChange={(e) => setWFeature(e.target.value)}
-                  className="w-full h-11 px-4 bg-[#111] border border-white/10 rounded-lg text-white/80 text-sm focus:outline-none focus:border-indigo-500/50 transition-all"
+              <div className="mt-5 flex gap-2">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setExitOpen(false);
+                    document.getElementById("analyze")?.scrollIntoView({ behavior: "smooth", block: "start" });
+                  }}
+                  className="flex-1 rounded-lg bg-cyan-300 px-4 py-2 text-sm font-bold text-slate-900"
                 >
-                  <option value="">Select a feature...</option>
-                  <option value="google-news-validator">
-                    Google News Validator
-                  </option>
-                  <option value="ai-citation-checker">
-                    AI Citation Checker
-                  </option>
-                  <option value="discover-checker">Discover Checker</option>
-                  <option value="schema-generator">Schema Generator</option>
-                  <option value="monitoring">News Monitoring</option>
-                  <option value="bulk-analysis">Bulk URL Analysis</option>
-                  <option value="publisher-dashboard">
-                    Publisher Dashboard
-                  </option>
-                </select>
+                  Analyze Free
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setExitOpen(false)}
+                  className="rounded-lg border border-white/15 px-4 py-2 text-sm text-white"
+                >
+                  Maybe later
+                </button>
               </div>
-
-              {wError && (
-                <p className="text-sm text-red-400 bg-red-500/10 px-4 py-3 rounded-lg border border-red-500/20">
-                  {wError}
-                </p>
-              )}
-
-              <button
-                type="submit"
-                disabled={wLoading}
-                className="w-full h-11 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 rounded-lg text-white font-semibold text-sm transition-all flex items-center justify-center gap-2"
-              >
-                {wLoading ? (
-                  <>
-                    <Loader2 className="w-4 h-4 animate-spin" />
-                    Joining...
-                  </>
-                ) : (
-                  <>
-                    Get Early Access
-                    <ArrowRight className="w-4 h-4" />
-                  </>
-                )}
-              </button>
-              <p className="text-xs text-white/30 text-center">
-                No spam. Unsubscribe anytime. We respect your privacy.
-              </p>
-            </form>
-          )}
-        </div>
-      </section>
+            </div>
+          </div>
+        )}
+      </main>
 
       <Footer />
+
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            name: "Google News SEO Toolkit",
+            url: "https://seo-toolkit-platform.vercel.app",
+            description: "Free google news validator and ai search optimization toolkit for publishers.",
+          }),
+        }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "WebSite",
+            name: "Google News SEO Toolkit",
+            url: "https://seo-toolkit-platform.vercel.app",
+            potentialAction: {
+              "@type": "SearchAction",
+              target: "https://seo-toolkit-platform.vercel.app/?q={search_term_string}",
+              "query-input": "required name=search_term_string",
+            },
+          }),
+        }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "SoftwareApplication",
+            name: "Google News SEO Toolkit",
+            applicationCategory: "WebApplication",
+            operatingSystem: "Web",
+            offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+          }),
+        }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            itemListElement: [
+              { "@type": "ListItem", position: 1, name: "Home", item: "https://seo-toolkit-platform.vercel.app/" },
+              { "@type": "ListItem", position: 2, name: "Google News SEO Analyzer", item: "https://seo-toolkit-platform.vercel.app/#analyze" },
+            ],
+          }),
+        }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Article",
+            headline: "Analyze Any Article for Google News, Discover and AI Search",
+            description: "Landing page for a free google news checker and ai search optimization analyzer.",
+            author: { "@type": "Organization", name: "Google News SEO Toolkit" },
+            publisher: { "@type": "Organization", name: "Google News SEO Toolkit" },
+            mainEntityOfPage: "https://seo-toolkit-platform.vercel.app/",
+          }),
+        }}
+      />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
     </div>
   );
 }
