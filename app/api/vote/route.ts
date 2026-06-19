@@ -48,8 +48,7 @@ export async function POST(request: NextRequest) {
       .slice(0, 5)
       .map(([featureId, count]) => ({ featureId, count }));
 
-    // Replace with persistent storage in production (database or KV).
-    console.log("[VOTE] Feature vote recorded:", sanitized);
+    // TODO: Replace with persistent storage in production (Vercel KV or database).
 
     return NextResponse.json({
       success: true,

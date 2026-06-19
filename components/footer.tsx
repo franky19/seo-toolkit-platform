@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Newspaper, X, Rss } from "lucide-react";
+import { Newspaper, Rss } from "lucide-react";
 
 const tools = [
   { href: "/tools/google-news-validator", label: "Google News Validator" },
@@ -31,10 +31,9 @@ export default function Footer() {
     <footer className="border-t border-white/5 bg-[#0a0a0a]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-16">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
-          {/* Brand */}
           <div className="md:col-span-1">
-            <Link href="/" className="flex items-center gap-2 mb-4">
-              <div className="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center">
+            <Link href="/" aria-label="Google News SEO Toolkit - Home" className="flex items-center gap-2 mb-4">
+              <div className="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center" aria-hidden="true">
                 <Newspaper className="w-4 h-4 text-white" />
               </div>
               <span className="font-semibold text-white text-sm">Google News SEO Toolkit</span>
@@ -44,69 +43,68 @@ export default function Footer() {
             </p>
             <div className="flex items-center gap-3">
               <a
-                href="https://twitter.com"
+                href="https://x.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-8 h-8 rounded-lg bg-white/5 hover:bg-white/10 flex items-center justify-center transition-colors"
-                aria-label="Twitter"
+                className="w-8 h-8 rounded-lg bg-white/5 hover:bg-white/10 flex items-center justify-center transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300/40"
+                aria-label="Follow us on X (formerly Twitter)"
               >
-                <X className="w-4 h-4 text-white/60" />
+                <span className="sr-only">X (Twitter)</span>
+                <svg className="w-4 h-4 text-white/60" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                </svg>
               </a>
               <a
                 href="/rss.xml"
-                className="w-8 h-8 rounded-lg bg-white/5 hover:bg-white/10 flex items-center justify-center transition-colors"
+                className="w-8 h-8 rounded-lg bg-white/5 hover:bg-white/10 flex items-center justify-center transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300/40"
                 aria-label="RSS Feed"
               >
-                <Rss className="w-4 h-4 text-white/60" />
+                <Rss className="w-4 h-4 text-white/60" aria-hidden="true" />
               </a>
             </div>
           </div>
 
-          {/* Tools */}
-          <div>
-            <h3 className="text-sm font-semibold text-white mb-4">Free Tools</h3>
+          <nav aria-label="Free tools">
+            <h2 className="text-sm font-semibold text-white mb-4">Free Tools</h2>
             <ul className="space-y-2.5">
               {tools.map((t) => (
                 <li key={t.href}>
                   <Link
                     href={t.href}
-                    className="text-sm text-white/50 hover:text-white transition-colors"
+                    className="text-sm text-white/50 hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300/40"
                   >
                     {t.label}
                   </Link>
                 </li>
               ))}
             </ul>
-          </div>
+          </nav>
 
-          {/* Blog */}
-          <div>
-            <h3 className="text-sm font-semibold text-white mb-4">
-              <Link href="/blog" className="hover:text-indigo-400 transition-colors">
-                Blog & Guides
+          <nav aria-label="Blog and guides">
+            <h2 className="text-sm font-semibold text-white mb-4">
+              <Link href="/blog" className="hover:text-indigo-400 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300/40">
+                Blog &amp; Guides
               </Link>
-            </h3>
+            </h2>
             <ul className="space-y-2.5">
               {blogLinks.map((b) => (
                 <li key={b.href}>
                   <Link
                     href={b.href}
-                    className="text-sm text-white/50 hover:text-white transition-colors"
+                    className="text-sm text-white/50 hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300/40"
                   >
                     {b.label}
                   </Link>
                 </li>
               ))}
             </ul>
-          </div>
+          </nav>
 
-          {/* Resources */}
-          <div>
-            <h3 className="text-sm font-semibold text-white mb-4">Resources</h3>
+          <nav aria-label="Resources">
+            <h2 className="text-sm font-semibold text-white mb-4">Resources</h2>
             <ul className="space-y-2.5">
               {[
-                { href: "/#waitlist", label: "Join Early Access" },
-                { href: "/#roadmap", label: "Product Roadmap" },
+                { href: "/#newsletter", label: "Join Early Access" },
                 { href: "/sitemap.xml", label: "Sitemap" },
                 { href: "/rss.xml", label: "RSS Feed" },
                 {
@@ -126,33 +124,39 @@ export default function Footer() {
                       href={r.href}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-sm text-white/50 hover:text-white transition-colors"
+                      className="text-sm text-white/50 hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300/40"
                     >
-                      {r.label}
+                      {r.label} <span className="sr-only">(opens in new tab)</span>
                     </a>
                   ) : (
-                    <Link href={r.href} className="text-sm text-white/50 hover:text-white transition-colors">
+                    <Link href={r.href} className="text-sm text-white/50 hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300/40">
                       {r.label}
                     </Link>
                   )}
                 </li>
               ))}
             </ul>
-          </div>
+          </nav>
         </div>
 
-        {/* Bottom bar */}
         <div className="border-t border-white/5 mt-12 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-sm text-white/30">
-            © {currentYear} Google News SEO Toolkit. Not affiliated with Google LLC.
+            &copy; {currentYear} Google News SEO Toolkit. Not affiliated with Google LLC.
           </p>
-          <p className="text-sm text-white/30">
-            Free market validation tool. Built for publishers & journalists.
-          </p>
+          <div className="flex items-center gap-4">
+            <Link href="/privacy" className="text-sm text-white/30 hover:text-white/50 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300/40">
+              Privacy Policy
+            </Link>
+            <Link href="/terms" className="text-sm text-white/30 hover:text-white/50 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300/40">
+              Terms of Service
+            </Link>
+            <span className="text-sm text-white/30">
+              Free market validation tool. Built for publishers &amp; journalists.
+            </span>
+          </div>
         </div>
       </div>
 
-      {/* Structured data */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
