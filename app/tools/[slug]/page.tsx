@@ -75,6 +75,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       url,
       type: "website",
     },
+    twitter: {
+      card: "summary_large_image",
+      title: `${page.title} - Free Analyzer`,
+      description: page.description,
+    },
   };
 }
 
@@ -97,7 +102,7 @@ export default async function ToolProgrammaticPage({ params }: Props) {
           <h1 className="mt-5 text-4xl font-black text-white sm:text-5xl">{page.title}</h1>
           <p className="mt-4 text-lg leading-relaxed text-slate-300">{page.description}</p>
 
-          <div className="mt-8 rounded-2xl border border-white/10 bg-white/5 p-5">
+          <article className="mt-8 rounded-2xl border border-white/10 bg-white/5 p-5">
             <h2 className="text-xl font-semibold text-white">What this tool checks</h2>
             <ul className="mt-3 space-y-2 text-sm text-slate-200">
               <li>Structured data and technical readiness signals</li>
@@ -106,14 +111,14 @@ export default async function ToolProgrammaticPage({ params }: Props) {
               <li>Keyword and intent alignment for {page.primaryKeyword}</li>
             </ul>
             <div className="mt-5 flex flex-wrap gap-2">
-              <Link href="/#analyze" className="rounded-lg bg-cyan-300 px-4 py-2 text-sm font-bold text-slate-900">
+              <Link href="/#analyze" className="rounded-lg bg-cyan-300 px-4 py-2 text-sm font-bold text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300/60">
                 Analyze Free
               </Link>
-              <Link href="/blog" className="rounded-lg border border-white/15 px-4 py-2 text-sm text-white">
+              <Link href="/blog" className="rounded-lg border border-white/15 px-4 py-2 text-sm text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300/40">
                 Read SEO Guides
               </Link>
             </div>
-          </div>
+          </article>
         </div>
       </main>
       <Footer />
@@ -134,6 +139,20 @@ export default async function ToolProgrammaticPage({ params }: Props) {
               price: "0",
               priceCurrency: "USD",
             },
+          }),
+        }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            itemListElement: [
+              { "@type": "ListItem", position: 1, name: "Home", item: "https://seo-toolkit-platform.vercel.app" },
+              { "@type": "ListItem", position: 2, name: "Tools", item: "https://seo-toolkit-platform.vercel.app/tools" },
+              { "@type": "ListItem", position: 3, name: page.title, item: url },
+            ],
           }),
         }}
       />

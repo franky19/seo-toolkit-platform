@@ -1,19 +1,26 @@
 import type { Metadata } from "next";
-import "./globals.css";
-import { ThemeProvider } from "@/components/theme-provider";
+import { Inter } from "next/font/google";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import "./globals.css";
+
+const inter = Inter({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-inter",
+  preload: true,
+});
 
 const siteUrl = "https://seo-toolkit-platform.vercel.app";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "Google News SEO Toolkit – Optimize Articles for Google News & AI Search",
+    default: "Google News SEO Toolkit – Free Google News Validator & Publisher SEO Audit",
     template: "%s | Google News SEO Toolkit",
   },
   description:
-    "Instantly analyze any article for Google News eligibility, NewsArticle schema, Discover readiness, and AI citation potential (ChatGPT, Gemini, Perplexity). Free, no signup.",
+    "Validate your articles for Google News, Discover, Search, and AI Search Engines. Free Google News validator, NewsArticle schema checker, and publisher SEO audit tool.",
   keywords: [
     "google news seo",
     "google news validator",
@@ -27,14 +34,19 @@ export const metadata: Metadata = {
     "news sitemap validator",
     "publisher seo",
     "google news requirements",
+    "ai search optimization",
+    "generative engine optimization",
+    "geo optimization",
+    "technical seo for news",
+    "news article optimization",
   ],
   authors: [{ name: "Google News SEO Toolkit", url: siteUrl }],
   creator: "Google News SEO Toolkit",
   publisher: "Google News SEO Toolkit",
   openGraph: {
-    title: "Google News SEO Toolkit – Optimize Articles for Google News & AI Search",
+    title: "Google News SEO Toolkit – Free Google News Validator & Publisher SEO Audit",
     description:
-      "Instantly analyze any article for Google News eligibility, NewsArticle schema, Discover readiness, and AI citation potential. Free analysis tool.",
+      "Validate your articles for Google News, Discover, Search, and AI Search Engines. Free analysis tool for publishers.",
     type: "website",
     locale: "en_US",
     url: siteUrl,
@@ -44,15 +56,15 @@ export const metadata: Metadata = {
         url: `${siteUrl}/og-image.png`,
         width: 1200,
         height: 630,
-        alt: "Google News SEO Toolkit",
+        alt: "Google News SEO Toolkit – Free Article Analysis",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Google News SEO Toolkit – Optimize Articles for Google News & AI Search",
+    title: "Google News SEO Toolkit – Free Google News Validator & Publisher SEO Audit",
     description:
-      "Instantly analyze any article for Google News eligibility, NewsArticle schema, Discover readiness, and AI citation potential.",
+      "Validate your articles for Google News, Discover, Search, and AI Search Engines. Free analysis tool.",
     images: [`${siteUrl}/og-image.png`],
   },
   robots: {
@@ -68,6 +80,9 @@ export const metadata: Metadata = {
   },
   alternates: {
     canonical: siteUrl,
+    types: {
+      "application/rss+xml": `${siteUrl}/rss.xml`,
+    },
   },
   category: "technology",
 };
@@ -78,8 +93,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark" suppressHydrationWarning>
+    <html lang="en" className={`dark ${inter.variable}`} suppressHydrationWarning>
       <head>
+        <link rel="icon" href="/favicon.ico" sizes="any" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -89,7 +105,7 @@ export default function RootLayout({
               name: "Google News SEO Toolkit",
               url: siteUrl,
               description:
-                "Free tool to analyze articles for Google News eligibility, schema validation, Discover readiness, and AI citation potential.",
+                "Free tool to validate articles for Google News eligibility, NewsArticle schema, Discover readiness, and AI citation potential.",
               applicationCategory: "WebApplication",
               operatingSystem: "Web",
               offers: {
@@ -107,14 +123,7 @@ export default function RootLayout({
         />
       </head>
       <body className="font-sans antialiased bg-[#0a0a0a] text-white">
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="dark"
-          enableSystem={false}
-          disableTransitionOnChange
-        >
-          {children}
-        </ThemeProvider>
+        {children}
         <Analytics />
         <SpeedInsights />
       </body>

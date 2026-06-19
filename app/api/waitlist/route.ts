@@ -42,7 +42,7 @@ export async function POST(request: NextRequest) {
     // Example with Vercel KV:
     // import { kv } from "@vercel/kv";
     // await kv.lpush("waitlist", JSON.stringify(entry));
-    console.log("[WAITLIST] New signup:", entry);
+    // TODO: Replace with real storage (Vercel KV, Airtable, Resend, etc.).
 
     return NextResponse.json({
       success: true,
