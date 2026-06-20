@@ -1,13 +1,8 @@
-export function LegalSection() {
+export default function LegalSection() {
   return (
-    <section className="space-y-6">
-      <h2 className="text-2xl font-bold">Ketentuan & Refund</h2>
-      <article className="prose dark:prose-invert text-sm">
-        <h3 className="text-lg font-semibold">Terms & Conditions</h3>
-        <p>Pengguna dilarang melakukan scraping, spamming, atau otomatisasi yang menyalahgunakan sistem kami. Kami berhak memodifikasi layanan sewaktu-waktu.</p>
-        <h3 className="text-lg font-semibold">Refund Policy</h3>
-        <p>Refund hanya diberikan untuk kesalahan sistem (system error). Kesalahan pengguna tidak dapat direfund. Masa pengajuan refund adalah 7 hari dengan proses approval manual.</p>
-      </article>
+    <section className="mt-12 p-6 bg-gray-50 rounded-lg">
+      <h2 className="text-xl font-bold mb-2">Legal Information</h2>
+      <p className="text-sm text-gray-600">All subscriptions are subject to our terms of service. Payments are non-refundable.</p>
     </section>
   );
 }
