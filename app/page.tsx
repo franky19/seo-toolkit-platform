@@ -1,23 +1,31 @@
-import { Check, ChevronDown, AlertCircle, Newspaper, Compass, Bot, FileCode2, Sparkles, Search } from "lucide-react";
+/** @format */
+
+"use client";
+import {
+  Check,
+  ChevronDown,
+  AlertCircle,
+  Newspaper,
+  Compass,
+  Bot,
+  FileCode2,
+  Sparkles,
+  Search,
+} from "lucide-react";
 import Link from "next/link";
 import dynamic from "next/dynamic";
-import Navbar from "@/components/navbar";
-import Footer from "@/components/footer";
+import {
+  Accordion,
+} from "@/components/ui/accordion";
 
 const HeroWrapper = dynamic(() => import("@/components/hero-wrapper"), {
   ssr: true,
   loading: () => <div className="h-[700px] w-full" />,
 });
-
-const NewsletterWrapper = dynamic(() => import("@/components/newsletter-wrapper"), {
-  ssr: false,
-});
-
-const ExitWrapper = dynamic(() => import("@/components/exit-wrapper"), {
-  ssr: false,
-});
-
-const siteUrl = "https://seo-toolkit-platform.vercel.app";
+const NewsletterWrapper = dynamic(
+  () => import("@/components/newsletter-wrapper"),
+  { ssr: false },
+);
 
 const WHY_NOT_IN_NEWS = [
   "Missing or invalid NewsArticle schema",
@@ -27,7 +35,6 @@ const WHY_NOT_IN_NEWS = [
   "No fresh news sitemap or outdated publication dates",
   "Thin entity coverage for AI citation engines",
 ];
-
 const ANALYSIS_AREAS = [
   {
     title: "Google News Score",
@@ -54,15 +61,21 @@ const ANALYSIS_AREAS = [
     icon: FileCode2,
   },
 ];
-
 const MANUAL_VS_TOOLKIT = [
   ["Audit speed per article", "20-45 min", "< 20 sec"],
   ["Google News validator checks", "Inconsistent", "Always included"],
-  ["Google Discover optimization hints", "Manual guesswork", "Actionable checklist"],
-  ["AI search optimization signals", "Not standardized", "Scored and prioritized"],
+  [
+    "Google Discover optimization hints",
+    "Manual guesswork",
+    "Actionable checklist",
+  ],
+  [
+    "AI search optimization signals",
+    "Not standardized",
+    "Scored and prioritized",
+  ],
   ["Fix recommendations", "Not structured", "Clear next steps"],
 ];
-
 const GOOGLE_NEWS_CHECKLIST = [
   "NewsArticle schema includes headline, image, datePublished, dateModified, author, and publisher",
   "Article URL is crawlable, indexable, and canonicalized",
@@ -71,7 +84,6 @@ const GOOGLE_NEWS_CHECKLIST = [
   "News sitemap includes last 48-hour URLs and is submitted to Search Console",
   "Article image is high quality and at least 1200px wide",
 ];
-
 const AI_CHECKLIST = [
   {
     engine: "ChatGPT",
@@ -102,7 +114,6 @@ const AI_CHECKLIST = [
     ],
   },
 ];
-
 const FAQS = [
   {
     q: "What is Google News SEO?",
@@ -170,40 +181,35 @@ const FAQS = [
   },
 ];
 
-const faqSchema = {
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  mainEntity: FAQS.map((faq) => ({
-    "@type": "Question",
-    name: faq.q,
-    acceptedAnswer: {
-      "@type": "Answer",
-      text: faq.a,
-    },
-  })),
-};
-
 export default function Home() {
   return (
-    <div className="min-h-screen bg-[#061217] text-slate-100">
-      <Navbar />
-
+    <div className="min-h-screen bg-background text-foreground">
       <main className="relative overflow-hidden">
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_15%,rgba(16,185,129,0.10),transparent_35%),radial-gradient(circle_at_80%_20%,rgba(34,211,238,0.12),transparent_32%),radial-gradient(circle_at_50%_90%,rgba(249,115,22,0.10),transparent_38%)]" aria-hidden="true" />
-
+        <div
+          className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_15%,var(--primary),transparent_35%),radial-gradient(circle_at_80%_20%,var(--primary),transparent_32%),radial-gradient(circle_at_50%_90%,var(--primary),transparent_38%)] opacity-10"
+          aria-hidden="true"
+        />
         <HeroWrapper />
-
-        <section className="border-t border-white/5 px-4 py-14 sm:px-6">
+        <section className="border-t border-border px-4 py-14 sm:px-6">
           <div className="mx-auto max-w-6xl">
-            <h2 className="text-2xl font-bold text-white sm:text-3xl">Why Your Article Is Not Appearing In Google News</h2>
-            <p className="mt-3 max-w-3xl text-slate-300">
-              Most publishers do not fail because of one major issue. They lose visibility through several small misses across google news requirements, entity trust, and technical consistency.
+            <h2 className="text-2xl font-bold text-foreground sm:text-3xl">
+              Why Your Article Is Not Appearing In Google News
+            </h2>
+            <p className="mt-3 max-w-3xl text-muted-foreground">
+              Most publishers do not fail because of one major issue. They lose
+              visibility through several small misses across google news
+              requirements, entity trust, and technical consistency.
             </p>
             <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
               {WHY_NOT_IN_NEWS.map((issue) => (
-                <div key={issue} className="rounded-2xl border border-white/10 bg-white/5 p-4 text-sm text-slate-200">
+                <div
+                  key={issue}
+                  className="rounded-2xl border border-border bg-card p-4 text-sm text-foreground">
                   <p className="inline-flex items-center gap-2">
-                    <AlertCircle className="h-4 w-4 text-amber-300" aria-hidden="true" />
+                    <AlertCircle
+                      className="h-4 w-4 text-amber-500"
+                      aria-hidden="true"
+                    />
                     {issue}
                   </p>
                 </div>
@@ -211,72 +217,91 @@ export default function Home() {
             </div>
           </div>
         </section>
-
-        <section className="border-t border-white/5 px-4 py-14 sm:px-6">
+        <section className="border-t border-border px-4 py-14 sm:px-6">
           <div className="mx-auto max-w-6xl">
-            <h2 className="text-2xl font-bold text-white sm:text-3xl">What We Analyze</h2>
-            <p className="mt-3 max-w-3xl text-slate-300">
-              The scoring engine combines google news validator checks, discover signals, and ai search optimization factors into a single action plan.
-            </p>
+            <h2 className="text-2xl font-bold text-foreground sm:text-3xl">
+              What We Analyze
+            </h2>
             <div className="mt-8 grid gap-4 md:grid-cols-2">
               {ANALYSIS_AREAS.map((item) => (
-                <article key={item.title} className="rounded-2xl border border-white/10 bg-white/5 p-5">
+                <article
+                  key={item.title}
+                  className="rounded-2xl border border-border bg-card p-5">
                   <div className="flex items-center gap-3">
-                    <div className="rounded-xl bg-cyan-300/15 p-2.5" aria-hidden="true">
-                      <item.icon className="h-5 w-5 text-cyan-200" />
+                    <div
+                      className="rounded-xl bg-primary/15 p-2.5"
+                      aria-hidden="true">
+                      <item.icon className="h-5 w-5 text-primary" />
                     </div>
                     <div>
-                      <h3 className="text-lg font-semibold text-white">{item.title}</h3>
-                      <p className="text-xs uppercase tracking-widest text-cyan-200">{item.keyword}</p>
+                      <h3 className="text-lg font-semibold text-foreground">
+                        {item.title}
+                      </h3>
+                      <p className="text-xs uppercase tracking-widest text-primary">
+                        {item.keyword}
+                      </p>
                     </div>
                   </div>
-                  <p className="mt-3 text-sm leading-relaxed text-slate-300">{item.text}</p>
+                  <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+                    {item.text}
+                  </p>
                 </article>
               ))}
             </div>
-
-            <div className="mt-8 rounded-2xl border border-emerald-300/20 bg-emerald-300/10 p-5">
-              <h3 className="text-lg font-semibold text-white">How Scoring Works and Why This Matters</h3>
-              <p className="mt-2 text-sm leading-relaxed text-emerald-50/90">
-                Scores are weighted by crawlability, structured data validity, publication trust signals, and citation readiness. Every score card includes actionable fixes so you never see a score without a next step.
-              </p>
-            </div>
           </div>
         </section>
-
-        <section className="border-t border-white/5 px-4 py-14 sm:px-6">
+        <section className="border-t border-border px-4 py-14 sm:px-6">
           <div className="mx-auto max-w-6xl">
-            <h2 className="text-2xl font-bold text-white sm:text-3xl">Google News Requirements Checklist</h2>
+            <h2 className="text-2xl font-bold text-foreground sm:text-3xl">
+              Google News Requirements Checklist
+            </h2>
             <div className="mt-6 space-y-3">
               {GOOGLE_NEWS_CHECKLIST.map((item) => (
-                <details key={item} className="group rounded-2xl border border-white/10 bg-white/5 p-4">
-                  <summary className="flex cursor-pointer list-none items-center justify-between gap-4 text-sm font-medium text-white">
-                    <span className="inline-flex items-center gap-2"><Check className="h-4 w-4 text-emerald-300" aria-hidden="true" />{item}</span>
-                    <ChevronDown className="h-4 w-4 text-slate-300 transition group-open:rotate-180" aria-hidden="true" />
+                <details
+                  key={item}
+                  className="group rounded-2xl border border-border bg-card p-4">
+                  <summary className="flex cursor-pointer list-none items-center justify-between gap-4 text-sm font-medium text-foreground">
+                    <span className="inline-flex items-center gap-2">
+                      <Check
+                        className="h-4 w-4 text-primary"
+                        aria-hidden="true"
+                      />
+                      {item}
+                    </span>
+                    <ChevronDown
+                      className="h-4 w-4 text-muted-foreground transition group-open:rotate-180"
+                      aria-hidden="true"
+                    />
                   </summary>
-                  <p className="mt-3 text-sm leading-relaxed text-slate-300">
-                    This requirement directly impacts google news seo performance and should be validated for each published URL.
+                  <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+                    This requirement directly impacts google news seo
+                    performance and should be validated for each published URL.
                   </p>
                 </details>
               ))}
             </div>
           </div>
         </section>
-
-        <section className="border-t border-white/5 px-4 py-14 sm:px-6">
+        <section className="border-t border-border px-4 py-14 sm:px-6">
           <div className="mx-auto max-w-6xl">
-            <h2 className="text-2xl font-bold text-white sm:text-3xl">Will AI Search Cite Your Article?</h2>
-            <p className="mt-3 max-w-3xl text-slate-300">
-              We evaluate entity coverage, EEAT signals, structured data quality, author trust, and citation readiness across modern answer engines.
-            </p>
+            <h2 className="text-2xl font-bold text-foreground sm:text-3xl">
+              Will AI Search Cite Your Article?
+            </h2>
             <div className="mt-6 grid gap-4 md:grid-cols-2">
               {AI_CHECKLIST.map((engine) => (
-                <article key={engine.engine} className="rounded-2xl border border-white/10 bg-white/5 p-5">
-                  <h3 className="text-lg font-semibold text-white">{engine.engine} Optimization Checklist</h3>
-                  <ul className="mt-3 space-y-2 text-sm text-slate-200">
+                <article
+                  key={engine.engine}
+                  className="rounded-2xl border border-border bg-card p-5">
+                  <h3 className="text-lg font-semibold text-foreground">
+                    {engine.engine} Optimization Checklist
+                  </h3>
+                  <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
                     {engine.points.map((point) => (
                       <li key={point} className="inline-flex items-start gap-2">
-                        <Sparkles className="mt-0.5 h-4 w-4 text-cyan-200" aria-hidden="true" />
+                        <Sparkles
+                          className="mt-0.5 h-4 w-4 text-primary"
+                          aria-hidden="true"
+                        />
                         {point}
                       </li>
                     ))}
@@ -286,25 +311,36 @@ export default function Home() {
             </div>
           </div>
         </section>
-
-        <section className="border-t border-white/5 px-4 py-14 sm:px-6">
+        <section className="border-t border-border px-4 py-14 sm:px-6">
           <div className="mx-auto max-w-6xl">
-            <h2 className="text-2xl font-bold text-white sm:text-3xl">Feature Comparison</h2>
-            <div className="mt-6 overflow-hidden rounded-2xl border border-white/10">
+            <h2 className="text-2xl font-bold text-foreground sm:text-3xl">
+              Feature Comparison
+            </h2>
+            <div className="mt-6 overflow-hidden rounded-2xl border border-border bg-card">
               <table className="w-full border-collapse text-left text-sm">
                 <thead>
-                  <tr className="bg-white/5 text-slate-200">
-                    <th scope="col" className="px-4 py-3 font-semibold">Category</th>
-                    <th scope="col" className="px-4 py-3 font-semibold">Manual Audit</th>
-                    <th scope="col" className="px-4 py-3 font-semibold">Google News SEO Toolkit</th>
+                  <tr className="bg-muted text-muted-foreground">
+                    <th scope="col" className="px-4 py-3 font-semibold">
+                      Category
+                    </th>
+                    <th scope="col" className="px-4 py-3 font-semibold">
+                      Manual Audit
+                    </th>
+                    <th scope="col" className="px-4 py-3 font-semibold">
+                      Google News SEO Toolkit
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
                   {MANUAL_VS_TOOLKIT.map((row) => (
-                    <tr key={row[0]} className="border-t border-white/10 text-slate-200">
+                    <tr
+                      key={row[0]}
+                      className="border-t border-border text-foreground">
                       <td className="px-4 py-3">{row[0]}</td>
-                      <td className="px-4 py-3 text-slate-300">{row[1]}</td>
-                      <td className="px-4 py-3 text-emerald-200">{row[2]}</td>
+                      <td className="px-4 py-3 text-muted-foreground">
+                        {row[1]}
+                      </td>
+                      <td className="px-4 py-3 text-primary">{row[2]}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -312,111 +348,29 @@ export default function Home() {
             </div>
           </div>
         </section>
-
-        <section className="border-t border-white/5 px-4 py-14 sm:px-6">
+        <section className="border-t border-border px-4 py-14 sm:px-6">
           <div className="mx-auto max-w-5xl">
-            <h2 className="text-2xl font-bold text-white sm:text-3xl">FAQ</h2>
-            <div className="mt-6 space-y-3">
-              {FAQS.map((faq) => (
-                <details key={faq.q} className="group rounded-2xl border border-white/10 bg-white/5 p-4">
-                  <summary className="flex cursor-pointer list-none items-center justify-between gap-4 font-medium text-white">
-                    <span>{faq.q}</span>
-                    <ChevronDown className="h-4 w-4 text-slate-300 transition group-open:rotate-180" aria-hidden="true" />
-                  </summary>
-                  <p className="mt-3 text-sm leading-relaxed text-slate-300">{faq.a}</p>
-                </details>
-              ))}
-            </div>
+            <h2 className="text-2xl font-bold text-foreground sm:text-3xl text-center mb-10">
+              FAQ
+            </h2>
+            <Accordion
+              type="single"
+              collapsible
+              items={FAQS.map((faq, i) => ({ value: `faq-${i}`, title: faq.q, children: faq.a }))}
+            />
           </div>
         </section>
-
         <NewsletterWrapper />
-
         <div className="fixed bottom-4 right-4 z-40">
           <Link
             href="/#analyze"
             aria-label="Analyze Free"
-            className="inline-flex items-center gap-2 rounded-full border border-cyan-300/50 bg-cyan-300 px-4 py-2 text-sm font-bold text-slate-900 shadow-xl shadow-black/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300/60"
-          >
+            className="inline-flex items-center gap-2 rounded-full border border-primary/50 bg-primary px-4 py-2 text-sm font-bold text-primary-foreground shadow-xl transition-all hover:scale-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
             <Search className="h-4 w-4" aria-hidden="true" />
             Analyze Free
           </Link>
         </div>
       </main>
-
-      <Footer />
-
-      <ExitWrapper />
-
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "Organization",
-            name: "Google News SEO Toolkit",
-            url: siteUrl,
-            description: "Free google news validator and ai search optimization toolkit for publishers.",
-          }),
-        }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "WebSite",
-            name: "Google News SEO Toolkit",
-            url: siteUrl,
-            potentialAction: {
-              "@type": "SearchAction",
-              target: `${siteUrl}/?q={search_term_string}`,
-              "query-input": "required name=search_term_string",
-            },
-          }),
-        }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "SoftwareApplication",
-            name: "Google News SEO Toolkit",
-            applicationCategory: "WebApplication",
-            operatingSystem: "Web",
-            offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
-          }),
-        }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "BreadcrumbList",
-            itemListElement: [
-              { "@type": "ListItem", position: 1, name: "Home", item: `${siteUrl}/` },
-              { "@type": "ListItem", position: 2, name: "Google News SEO Analyzer", item: `${siteUrl}/#analyze` },
-            ],
-          }),
-        }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "Article",
-            headline: "Analyze Any Article for Google News, Discover and AI Search",
-            description: "Landing page for a free google news checker and ai search optimization analyzer.",
-            author: { "@type": "Organization", name: "Google News SEO Toolkit" },
-            publisher: { "@type": "Organization", name: "Google News SEO Toolkit" },
-            mainEntityOfPage: siteUrl,
-          }),
-        }}
-      />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
     </div>
   );
 }

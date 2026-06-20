@@ -1,3 +1,5 @@
+/** @format */
+
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
@@ -15,7 +17,8 @@ export async function generateStaticParams() {
   const posts = [
     ...requestedBlogPosts,
     ...blogPosts.filter(
-      (post) => !requestedBlogPosts.some((requested) => requested.slug === post.slug),
+      (post) =>
+        !requestedBlogPosts.some((requested) => requested.slug === post.slug),
     ),
   ];
 
@@ -27,7 +30,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const posts = [
     ...requestedBlogPosts,
     ...blogPosts.filter(
-      (post) => !requestedBlogPosts.some((requested) => requested.slug === post.slug),
+      (post) =>
+        !requestedBlogPosts.some((requested) => requested.slug === post.slug),
     ),
   ];
   const post = posts.find((p) => p.slug === slug);
@@ -61,7 +65,8 @@ export default async function BlogPostPage({ params }: Readonly<Props>) {
   const posts = [
     ...requestedBlogPosts,
     ...blogPosts.filter(
-      (item) => !requestedBlogPosts.some((requested) => requested.slug === item.slug),
+      (item) =>
+        !requestedBlogPosts.some((requested) => requested.slug === item.slug),
     ),
   ];
 
@@ -70,30 +75,48 @@ export default async function BlogPostPage({ params }: Readonly<Props>) {
 
   const postIndex = posts.indexOf(post);
   const next = posts[postIndex + 1];
-  const related = posts.filter((p) => p.slug !== post.slug && p.category === post.category).slice(0, 3);
+  const related = posts
+    .filter((p) => p.slug !== post.slug && p.category === post.category)
+    .slice(0, 3);
 
   return (
-    <div className="bg-[#0a0a0a] min-h-screen text-white">
+    <div className="bg-background min-h-screen text-foreground">
       <Navbar />
 
       <main>
         <article className="pt-32 pb-16 px-4 sm:px-6">
           <div className="max-w-3xl mx-auto">
-            <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-sm text-white/40 mb-8">
-              <Link href="/" className="hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300/40">Home</Link>
+            <nav
+              aria-label="Breadcrumb"
+              className="flex items-center gap-2 text-sm text-muted-foreground mb-8">
+              <Link
+                href="/"
+                className="hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+                Home
+              </Link>
               <span aria-hidden="true">/</span>
-              <Link href="/blog" className="hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300/40">Blog</Link>
+              <Link
+                href="/blog"
+                className="hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+                Blog
+              </Link>
               <span aria-hidden="true">/</span>
-              <span className="text-white/70" aria-current="page">{post.category}</span>
+              <span className="text-foreground/70" aria-current="page">
+                {post.category}
+              </span>
             </nav>
 
             <header className="mb-10">
-              <span className="inline-block text-xs px-3 py-1 bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 rounded-full mb-5">
+              <span className="inline-block text-xs px-3 py-1 bg-primary/10 text-primary border border-primary/20 rounded-full mb-5">
                 {post.category}
               </span>
-              <h1 className="text-3xl sm:text-4xl font-bold text-white mb-5 leading-tight">{post.title}</h1>
-              <p className="text-lg text-white/60 leading-relaxed mb-6">{post.description}</p>
-              <div className="flex items-center gap-5 text-sm text-white/40 pb-6 border-b border-white/5">
+              <h1 className="text-3xl sm:text-4xl font-bold text-foreground mb-5 leading-tight">
+                {post.title}
+              </h1>
+              <p className="text-lg text-muted-foreground leading-relaxed mb-6">
+                {post.description}
+              </p>
+              <div className="flex items-center gap-5 text-sm text-muted-foreground pb-6 border-b border-border">
                 <span className="flex items-center gap-1.5">
                   <Clock className="w-4 h-4" aria-hidden="true" />
                   {post.readTime} min read
@@ -129,12 +152,15 @@ export default async function BlogPostPage({ params }: Readonly<Props>) {
               <h2 className="sr-only">Article tags</h2>
               <div className="flex flex-wrap gap-2" aria-label="Article tags">
                 {post.tags.map((tag) => (
-                  <span
-                    key={tag}
-                    className="text-xs px-3 py-1.5 bg-white/5 text-white/50 border border-white/8 rounded-full"
-                  >
+                  <span key={tag} className="inline-block text-xs px-3 py-1 bg-primary/10 text-primary border border-primary/20 rounded-full mb-5">
                     {tag}
                   </span>
+                  // <span
+                  //   key={tag}
+                  //   className="text-xs px-3 py-1.5 bg-white/5 text-muted-f border border-white/8 rounded-full"
+                  // >
+                  //   {tag}
+                  // </span>
                 ))}
               </div>
             </div>
@@ -142,21 +168,27 @@ export default async function BlogPostPage({ params }: Readonly<Props>) {
         </article>
 
         {related.length > 0 && (
-          <section className="px-4 sm:px-6 py-12 border-t border-white/5" aria-labelledby="related-heading">
+          <section
+            className="px-4 sm:px-6 py-12 border-t border-border"
+            aria-labelledby="related-heading">
             <div className="max-w-3xl mx-auto">
-              <h2 id="related-heading" className="text-lg font-semibold text-white mb-5">Related Articles</h2>
+              <h2
+                id="related-heading"
+                className="text-lg font-semibold text-foreground mb-5">
+                Related Articles
+              </h2>
               <div className="grid sm:grid-cols-3 gap-4">
                 {related.map((p) => (
                   <article key={p.slug}>
                     <Link
                       href={`/blog/${p.slug}`}
-                      className="block card-surface rounded-xl p-4 group hover:border-indigo-500/20 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400/60"
-                    >
-                      <h3 className="text-sm font-medium text-white mb-2 group-hover:text-indigo-300 transition-colors leading-snug">
+                      className="block card-surface rounded-xl p-4 group hover:border-primary/20 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+                      <h3 className="text-sm font-medium text-foreground mb-2 group-hover:text-primary transition-colors leading-snug">
                         {p.title}
                       </h3>
-                      <span className="text-xs text-white/40 flex items-center gap-1 mt-3">
-                        Read more <ArrowRight className="w-3 h-3" aria-hidden="true" />
+                      <span className="text-xs text-muted-foreground flex items-center gap-1 mt-3">
+                        Read more{" "}
+                        <ArrowRight className="w-3 h-3" aria-hidden="true" />
                       </span>
                     </Link>
                   </article>
@@ -166,22 +198,24 @@ export default async function BlogPostPage({ params }: Readonly<Props>) {
           </section>
         )}
 
-        <nav aria-label="Blog post navigation" className="px-4 sm:px-6 py-12 border-t border-white/5">
+        <nav
+          aria-label="Blog post navigation"
+          className="px-4 sm:px-6 py-12 border-t border-white/5">
           <div className="max-w-3xl mx-auto flex justify-between gap-4">
             {next && (
               <Link
                 href={`/blog/${next.slug}`}
-                className="flex items-center gap-2 text-sm text-white/50 hover:text-white transition-colors text-right group ml-auto focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300/40"
-              >
+                className="flex items-center gap-2 text-sm text-white/50 hover:text-white transition-colors text-right group ml-auto focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300/40">
                 <span className="line-clamp-1">{next.title}</span>
-                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" aria-hidden="true" />
+                <ArrowRight
+                  className="w-4 h-4 group-hover:translate-x-1 transition-transform"
+                  aria-hidden="true"
+                />
               </Link>
             )}
           </div>
         </nav>
       </main>
-
-      <Footer />
 
       <script
         type="application/ld+json"
@@ -216,9 +250,24 @@ export default async function BlogPostPage({ params }: Readonly<Props>) {
             "@context": "https://schema.org",
             "@type": "BreadcrumbList",
             itemListElement: [
-              { "@type": "ListItem", position: 1, name: "Home", item: "https://seo-toolkit-platform.vercel.app" },
-              { "@type": "ListItem", position: 2, name: "Blog", item: "https://seo-toolkit-platform.vercel.app/blog" },
-              { "@type": "ListItem", position: 3, name: post.title, item: `https://seo-toolkit-platform.vercel.app/blog/${post.slug}` },
+              {
+                "@type": "ListItem",
+                position: 1,
+                name: "Home",
+                item: "https://seo-toolkit-platform.vercel.app",
+              },
+              {
+                "@type": "ListItem",
+                position: 2,
+                name: "Blog",
+                item: "https://seo-toolkit-platform.vercel.app/blog",
+              },
+              {
+                "@type": "ListItem",
+                position: 3,
+                name: post.title,
+                item: `https://seo-toolkit-platform.vercel.app/blog/${post.slug}`,
+              },
             ],
           }),
         }}

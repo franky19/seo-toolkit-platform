@@ -92,36 +92,35 @@ export default async function ToolProgrammaticPage({ params }: Props) {
   const url = `https://seo-toolkit-platform.vercel.app/tools/${slug}`;
 
   return (
-    <div className="min-h-screen bg-[#061217] text-slate-100">
+    <div className="min-h-screen bg-background text-foreground">
       <Navbar />
       <main className="px-4 pb-16 pt-32 sm:px-6">
         <div className="mx-auto max-w-4xl">
-          <p className="inline-flex rounded-full border border-cyan-300/20 bg-cyan-300/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.14em] text-cyan-100">
+          <p className="inline-flex rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.14em] text-primary">
             Programmatic SEO Tool Page
           </p>
-          <h1 className="mt-5 text-4xl font-black text-white sm:text-5xl">{page.title}</h1>
-          <p className="mt-4 text-lg leading-relaxed text-slate-300">{page.description}</p>
+          <h1 className="mt-5 text-4xl font-black text-foreground sm:text-5xl">{page.title}</h1>
+          <p className="mt-4 text-lg leading-relaxed text-muted-foreground">{page.description}</p>
 
-          <article className="mt-8 rounded-2xl border border-white/10 bg-white/5 p-5">
-            <h2 className="text-xl font-semibold text-white">What this tool checks</h2>
-            <ul className="mt-3 space-y-2 text-sm text-slate-200">
+          <article className="mt-8 rounded-2xl border border-border bg-card p-5 shadow-sm">
+            <h2 className="text-xl font-semibold text-foreground">What this tool checks</h2>
+            <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
               <li>Structured data and technical readiness signals</li>
               <li>Indexability, freshness, and canonical consistency</li>
               <li>Actionable fixes for better visibility and citation potential</li>
               <li>Keyword and intent alignment for {page.primaryKeyword}</li>
             </ul>
             <div className="mt-5 flex flex-wrap gap-2">
-              <Link href="/#analyze" className="rounded-lg bg-cyan-300 px-4 py-2 text-sm font-bold text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300/60">
+              <Link href="/#analyze" className="rounded-lg bg-primary px-4 py-2 text-sm font-bold text-primary-foreground hover:bg-primary/90 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
                 Analyze Free
               </Link>
-              <Link href="/blog" className="rounded-lg border border-white/15 px-4 py-2 text-sm text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300/40">
+              <Link href="/blog" className="rounded-lg border border-border px-4 py-2 text-sm text-foreground hover:bg-accent transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
                 Read SEO Guides
               </Link>
             </div>
           </article>
         </div>
       </main>
-      <Footer />
 
       <script
         type="application/ld+json"

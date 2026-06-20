@@ -139,16 +139,16 @@ export default function HeroAnalyzer() {
               <p className="inline-flex items-center gap-2 rounded-full border border-emerald-400/20 bg-emerald-300/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-emerald-200">
                 Free Google News SEO Analyzer
               </p>
-              <h1 className="mt-5 text-4xl font-black leading-tight text-white sm:text-5xl lg:text-6xl">
+              <h1 className="mt-5 text-4xl font-black leading-tight text-foreground sm:text-5xl lg:text-6xl">
                 Analyze Any Article for Google News, Discover and AI Search
               </h1>
-              <p className="mt-5 max-w-2xl text-base leading-relaxed text-slate-300 sm:text-lg">
+              <p className="mt-5 max-w-2xl text-base leading-relaxed text-muted-foreground sm:text-lg">
                 Instantly check whether your article is eligible for google news, optimized for google discover optimization, and ready to be cited by ChatGPT, Gemini, Claude and Perplexity.
               </p>
             </div>
 
-            <div className="rounded-3xl border border-white/10 bg-[#071b23]/90 p-5 shadow-2xl shadow-black/30 sm:p-6">
-              <label htmlFor="homepage-article-url" className="text-xs font-semibold uppercase tracking-[0.12em] text-cyan-200">Paste article URL</label>
+            <div className="rounded-3xl border border-border bg-card p-5 shadow-sm sm:p-6">
+              <label htmlFor="homepage-article-url" className="text-xs font-semibold uppercase tracking-[0.12em] text-primary">Paste article URL</label>
               <div className="mt-3 flex flex-col gap-3 sm:flex-row">
                 <div className="relative flex-1">
                   <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" aria-hidden="true" />
@@ -159,7 +159,7 @@ export default function HeroAnalyzer() {
                     onChange={(event) => setUrl(event.target.value)}
                     placeholder="https://yournewsdomain.com/article"
                     aria-label="Article URL to analyze"
-                    className="h-12 w-full rounded-xl border border-white/10 bg-black/20 pl-10 pr-3 text-sm text-white placeholder:text-slate-500 focus:border-cyan-300/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300/40"
+                    className="h-12 w-full rounded-xl border border-border bg-background/80 pl-10 pr-3 text-sm text-foreground placeholder:text-muted-foreground focus:border-ring focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                   />
                 </div>
                 <button
@@ -167,7 +167,7 @@ export default function HeroAnalyzer() {
                   onClick={handleAudit}
                   disabled={loading}
                   aria-label={loading ? "Analyzing article..." : "Analyze Free"}
-                  className="inline-flex h-12 min-w-36 items-center justify-center gap-2 rounded-xl bg-cyan-300 px-5 text-sm font-bold text-slate-900 transition hover:bg-cyan-200 disabled:cursor-not-allowed disabled:opacity-60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300/60 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900"
+                    className="inline-flex h-12 min-w-36 items-center justify-center gap-2 rounded-xl bg-primary px-5 text-sm font-bold text-primary-foreground transition-all hover:-translate-y-0.5 hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
                 >
                   {loading ? <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" /> : <Zap className="h-4 w-4" aria-hidden="true" />}
                   {loading ? "Analyzing" : "Analyze Free"}
@@ -183,7 +183,7 @@ export default function HeroAnalyzer() {
                   "5 Analyses Per Day",
                   "Results In Seconds",
                 ].map((item) => (
-                  <span key={item} className="inline-flex items-center gap-1 rounded-md border border-emerald-300/20 bg-emerald-300/10 px-2 py-1">
+                  <span key={item} className="inline-flex items-center gap-1 rounded-md border border-border bg-background/70 px-2 py-1 text-foreground shadow-sm">
                     <CheckCircle2 className="h-3.5 w-3.5 text-emerald-300" aria-hidden="true" />
                     {item}
                   </span>
@@ -196,60 +196,60 @@ export default function HeroAnalyzer() {
         </div>
       </section>
 
-      <section className="border-t border-white/5 px-4 py-14 sm:px-6">
+      <section className="border-t border-border px-4 py-14 sm:px-6">
         <div className="mx-auto max-w-6xl">
-          <h2 className="text-2xl font-bold text-white sm:text-3xl">Live Example Report</h2>
-          <p className="mt-3 max-w-3xl text-slate-300">A clear report format with score transparency, methodology context, and precise fixes.</p>
+          <h2 className="text-2xl font-bold text-foreground sm:text-3xl">Live Example Report</h2>
+          <p className="mt-3 max-w-3xl text-muted-foreground">A clear report format with score transparency, methodology context, and precise fixes.</p>
 
-          <div className="mt-8 rounded-3xl border border-white/10 bg-[#081f28]/90 p-5 sm:p-6">
-            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
-              {scores.map((score) => (
-                <div key={score.label} className="rounded-xl border border-white/10 bg-black/20 p-4 text-center">
-                  <p className="text-3xl font-black text-green-500">{score.value}</p>
-                  <p className="mt-2 text-xs text-slate-300">{score.label}</p>
+            <div className="mt-8 rounded-3xl border border-border bg-card p-5 shadow-sm sm:p-6">
+              <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+                {scores.map((score) => (
+                  <div key={score.label} className="rounded-xl border border-border bg-background/80 p-4 text-center shadow-sm">
+                  <p className="text-3xl font-black text-primary">{score.value}</p>
+                  <p className="mt-2 text-xs text-muted-foreground">{score.label}</p>
                   <div
-                    className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-white/10"
+                    className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-secondary"
                     role="progressbar"
                     aria-valuenow={score.value}
                     aria-valuemin={0}
                     aria-valuemax={100}
                     aria-label={`${score.label}: ${score.value} out of 100`}
                   >
-                    <div
-                      className="h-full rounded-full bg-green-500 transition-all"
-                      style={{ width: `${score.value}%` }}
-                    />
+                      <div
+                        className="h-full rounded-full bg-primary transition-all"
+                        style={{ width: `${score.value}%` }}
+                      />
                   </div>
                 </div>
               ))}
             </div>
 
             <div className="mt-6 grid gap-4 lg:grid-cols-2">
-              <div className="rounded-xl border border-white/10 bg-white/5 p-4">
+              <div className="rounded-xl border border-border bg-card p-4 shadow-sm">
                 <div className="mb-3 flex items-center justify-between">
-                  <h3 className="font-semibold text-white">Key Validation Signals</h3>
+                  <h3 className="font-semibold text-foreground">Key Validation Signals</h3>
                   <StatusIcon status={auditReport?.googleNewsAudit.status ?? "WARNING"} />
                 </div>
-                <ul className="space-y-2 text-sm text-slate-200">
-                  <li className="flex items-center justify-between"><span>NewsArticle schema</span><span className="text-emerald-300">Pass</span></li>
-                  <li className="flex items-center justify-between"><span>Author transparency</span><span className="text-amber-300">Warning</span></li>
-                  <li className="flex items-center justify-between"><span>Entity coverage</span><span className="text-cyan-200">Strong</span></li>
-                  <li className="flex items-center justify-between"><span>AI citation readiness</span><span className="text-emerald-300">Pass</span></li>
+                <ul className="space-y-2 text-sm text-muted-foreground">
+                  <li className="flex items-center justify-between"><span>NewsArticle schema</span><span className="text-emerald-600">Pass</span></li>
+                  <li className="flex items-center justify-between"><span>Author transparency</span><span className="text-amber-600">Warning</span></li>
+                  <li className="flex items-center justify-between"><span>Entity coverage</span><span className="text-primary">Strong</span></li>
+                  <li className="flex items-center justify-between"><span>AI citation readiness</span><span className="text-emerald-600">Pass</span></li>
                 </ul>
               </div>
 
-              <div className="rounded-xl border border-white/10 bg-white/5 p-4">
-                <h3 className="font-semibold text-white">Actionable Recommendations</h3>
-                <ul className="mt-3 space-y-2 text-sm text-slate-200">
+              <div className="rounded-xl border border-border bg-card p-4 shadow-sm">
+                <h3 className="font-semibold text-foreground">Actionable Recommendations</h3>
+                <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
                   {(auditReport?.recommendations.slice(0, 4) ?? [
                     { title: "Add detailed author page links", action: "Link each byline to a credential-rich author page." },
                     { title: "Increase image resolution", action: "Use at least one 1200px-wide image for discover eligibility." },
                     { title: "Expand entity context", action: "Include named entities and factual references for llm optimization." },
                     { title: "Strengthen publisher schema", action: "Add Organization + logo + sameAs profile links." },
                   ]).map((item, index) => (
-                    <li key={`${item.title}-${index}`} className="rounded-lg border border-white/10 bg-black/20 p-3">
-                      <p className="font-medium text-white">{item.title}</p>
-                      <p className="mt-1 text-slate-300">{"action" in item ? item.action : "Apply recommended fixes to improve score."}</p>
+                    <li key={`${item.title}-${index}`} className="rounded-lg border border-border bg-background/70 p-3 shadow-sm">
+                      <p className="font-medium text-foreground">{item.title}</p>
+                      <p className="mt-1 text-muted-foreground">{"action" in item ? item.action : "Apply recommended fixes to improve score."}</p>
                     </li>
                   ))}
                 </ul>
