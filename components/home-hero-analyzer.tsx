@@ -166,7 +166,7 @@ export default function HeroAnalyzer() {
                   type="button"
                   onClick={handleAudit}
                   disabled={loading}
-                  aria-label={loading ? "Analyzing article" : "Analyze article for free"}
+                  aria-label={loading ? "Analyzing article..." : "Analyze Free"}
                   className="inline-flex h-12 min-w-36 items-center justify-center gap-2 rounded-xl bg-cyan-300 px-5 text-sm font-bold text-slate-900 transition hover:bg-cyan-200 disabled:cursor-not-allowed disabled:opacity-60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300/60 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900"
                 >
                   {loading ? <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" /> : <Zap className="h-4 w-4" aria-hidden="true" />}
