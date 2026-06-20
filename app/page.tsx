@@ -1,10 +1,21 @@
 import { Check, ChevronDown, AlertCircle, Newspaper, Compass, Bot, FileCode2, Sparkles, Search } from "lucide-react";
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import Navbar from "@/components/navbar";
 import Footer from "@/components/footer";
-import HeroWrapper from "@/components/hero-wrapper";
-import NewsletterWrapper from "@/components/newsletter-wrapper";
-import ExitWrapper from "@/components/exit-wrapper";
+
+const HeroWrapper = dynamic(() => import("@/components/hero-wrapper"), {
+  ssr: true,
+  loading: () => <div className="h-[700px] w-full" />,
+});
+
+const NewsletterWrapper = dynamic(() => import("@/components/newsletter-wrapper"), {
+  ssr: true,
+});
+
+const ExitWrapper = dynamic(() => import("@/components/exit-wrapper"), {
+  ssr: true,
+});
 
 const siteUrl = "https://seo-toolkit-platform.vercel.app";
 
@@ -324,7 +335,7 @@ export default function Home() {
         <div className="fixed bottom-4 right-4 z-40">
           <Link
             href="/#analyze"
-            aria-label="Scroll to analyzer tool"
+            aria-label="Analyze Free"
             className="inline-flex items-center gap-2 rounded-full border border-cyan-300/50 bg-cyan-300 px-4 py-2 text-sm font-bold text-slate-900 shadow-xl shadow-black/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300/60"
           >
             <Search className="h-4 w-4" aria-hidden="true" />

@@ -55,10 +55,9 @@ export default function Navbar() {
           <div className="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center" aria-hidden="true">
             <Newspaper className="w-4 h-4 text-white" />
           </div>
-          <span className="font-semibold text-white text-sm hidden sm:block">
+          <span className="font-semibold text-white text-sm">
             Google News SEO Toolkit
           </span>
-          <span className="font-semibold text-white text-sm sm:hidden">GN Toolkit</span>
         </Link>
 
         <div className="hidden md:flex items-center gap-1" role="menubar">

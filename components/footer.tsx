@@ -140,17 +140,17 @@ export default function Footer() {
         </div>
 
         <div className="border-t border-white/5 mt-12 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-sm text-white/30">
+          <p className="text-sm text-white/50">
             &copy; {currentYear} Google News SEO Toolkit. Not affiliated with Google LLC.
           </p>
           <div className="flex items-center gap-4">
-            <Link href="/privacy" className="text-sm text-white/30 hover:text-white/50 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300/40">
+            <Link href="/privacy" className="text-sm text-white/50 hover:text-white/70 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300/40">
               Privacy Policy
             </Link>
-            <Link href="/terms" className="text-sm text-white/30 hover:text-white/50 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300/40">
+            <Link href="/terms" className="text-sm text-white/50 hover:text-white/70 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300/40">
               Terms of Service
             </Link>
-            <span className="text-sm text-white/30">
+            <span className="text-sm text-white/50">
               Free market validation tool. Built for publishers &amp; journalists.
             </span>
           </div>
