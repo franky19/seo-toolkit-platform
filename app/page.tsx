@@ -10,11 +10,11 @@ const HeroWrapper = dynamic(() => import("@/components/hero-wrapper"), {
 });
 
 const NewsletterWrapper = dynamic(() => import("@/components/newsletter-wrapper"), {
-  ssr: true,
+  ssr: false,
 });
 
 const ExitWrapper = dynamic(() => import("@/components/exit-wrapper"), {
-  ssr: true,
+  ssr: false,
 });
 
 const siteUrl = "https://seo-toolkit-platform.vercel.app";
