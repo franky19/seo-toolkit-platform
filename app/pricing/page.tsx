@@ -1,25 +1,10 @@
 import type { Metadata } from 'next';
 import { Fragment } from 'react';
 
-// Assuming these are available shadcn/ui components or custom components
-// For the purpose of this example, these imports are illustrative.
-// In a real scenario, you'd confirm their paths or generate them.
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Separator } from '@/components/ui/separator';
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from '@/components/ui/accordion';
 
 // --- Data Definitions ---
-interface PlanFeature {
-  text: string;
-  included: boolean;
-}
-
 interface PricingPlan {
   name: string;
   monthlyPrice: number; // in IDR
@@ -154,9 +139,9 @@ const securityFeatures = [
 
 const paymentMethods = [
   { name: 'Credit Card', icon: '💳' },
-  { name: 'Debit Card', icon: '💳' }, // Using a standard emoji for Debit Card
+  { name: 'Debit Card', icon: '💳' },
   { name: 'QRIS', icon: '📱' },
-  { name: 'GoPay', icon: '🟢' }, // Using a generic icon representation
+  { name: 'GoPay', icon: '🟢' },
   { name: 'Virtual Account', icon: '🏦' },
   { name: 'Bank Transfer', icon: '🏧' },
   { name: 'E-wallet', icon: '💰' },
@@ -211,7 +196,7 @@ export const metadata: Metadata = {
     siteName: SITE_NAME,
     images: [
       {
-        url: 'https://seo-toolkit-platform.vercel.app/og-image.jpg', // Placeholder OG image
+        url: 'https://seo-toolkit-platform.vercel.app/og-image.jpg',
         width: 1200,
         height: 630,
         alt: 'SEO Toolkit Platform Pricing',
@@ -224,7 +209,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Harga Langganan | Platform SEO Toolkit',
     description: 'Pilih paket SEO Toolkit yang paling sesuai untuk bisnis Anda. Dapatkan riset kata kunci, pelacakan peringkat, audit situs, dan lainnya dengan harga transparan.',
-    images: ['https://seo-toolkit-platform.vercel.app/twitter-image.jpg'], // Placeholder Twitter image
+    images: ['https://seo-toolkit-platform.vercel.app/twitter-image.jpg'],
   },
 };
 
@@ -238,10 +223,10 @@ function JsonLd() {
         '@id': `${SITE_URL}#organization`,
         'name': SITE_NAME,
         'url': 'https://seo-toolkit-platform.vercel.app',
-        'logo': 'https://seo-toolkit-platform.vercel.app/logo.png', // Placeholder logo
+        'logo': 'https://seo-toolkit-platform.vercel.app/logo.png',
         'contactPoint': {
           '@type': 'ContactPoint',
-          'telephone': '+62-812-3456-7890', // Placeholder phone number
+          'telephone': '+62-812-3456-7890',
           'contactType': 'Customer Service',
           'email': 'support@seotoolkit.com',
         },
@@ -268,7 +253,7 @@ function JsonLd() {
         'name': 'SEO Toolkit Platform',
         'description': 'Platform perangkat SEO lengkap untuk profesional dan bisnis.',
         'brand': { '@id': `${SITE_URL}#organization` },
-        'aggregateRating': { // Placeholder rating
+        'aggregateRating': {
           '@type': 'AggregateRating',
           'ratingValue': '4.8',
           'reviewCount': '1240',
@@ -276,14 +261,14 @@ function JsonLd() {
         'offers': pricingPlans.map(plan => ({
           '@type': 'Offer',
           'name': plan.name,
-          'price': (plan.monthlyPrice / 1000).toFixed(2), // Assuming price is in '000s IDR
+          'price': (plan.monthlyPrice / 1000).toFixed(2),
           'priceCurrency': 'IDR',
           'priceSpecification': {
             '@type': 'PriceSpecification',
             'price': (plan.monthlyPrice / 1000).toFixed(2),
             'priceCurrency': 'IDR',
             'valueAddedTaxIncluded': 'False',
-            'billingPeriod': 'P1M', // Monthly billing period
+            'billingPeriod': 'P1M',
           },
           'url': SITE_URL,
           'seller': { '@id': `${SITE_URL}#organization` },
@@ -334,7 +319,6 @@ export default function PricingPage() {
     <Fragment>
       <JsonLd />
       <main className="flex min-h-screen flex-col items-center py-12 md:py-24 px-4 sm:px-6 lg:px-8 bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-gray-50">
-        {/* Hero Section */}
         <section className="text-center max-w-4xl mx-auto mb-16 md:mb-24">
           <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight mb-4 text-balance">
             Solusi SEO Lengkap untuk Pertumbuhan Bisnis Anda
@@ -356,21 +340,18 @@ export default function PricingPage() {
             <p className="flex items-center gap-1">✔ Pembayaran aman</p>
             <p className="flex items-center gap-1">✔ Akses instan</p>
           </div>
-          {/* Trust badges placeholder */}
           <div className="mt-8 flex justify-center items-center gap-4">
-            {/* Example trust badges - replace with actual images or SVGs */}
             <span className="text-gray-400 text-sm" aria-label="Midtrans Verified">Midtrans Verified</span>
             <span className="text-gray-400 text-sm" aria-label="SSL Secure">SSL Secure</span>
             <span className="text-gray-400 text-sm" aria-label="ISO 27001 Certified">ISO 27001 Certified</span>
           </div>
         </section>
 
-        {/* Pricing Cards */}
         <section id="pricing-cards" className="w-full max-w-6xl mx-auto mb-16 md:mb-24">
           <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">Pilih Paket yang Sesuai untuk Anda</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {pricingPlans.map((plan) => (
-              <Card key={plan.name} className={\`relative flex flex-col \${plan.isRecommended ? 'border-2 border-blue-500 shadow-lg' : ''}\`}>
+              <Card key={plan.name} className={`relative flex flex-col ${plan.isRecommended ? 'border-2 border-blue-500 shadow-lg' : ''}`}>
                 {plan.isRecommended && (
                   <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-blue-500 text-white text-xs font-bold px-3 py-1 rounded-full">
                     Rekomendasi
@@ -407,14 +388,13 @@ export default function PricingPage() {
                   </ul>
                 </CardContent>
                 <CardFooter>
-                  <Button className="w-full" aria-label={\`Pilih paket \${plan.name}\`}>Pilih Paket {plan.name}</Button>
+                  <Button className="w-full" aria-label={`Pilih paket ${plan.name}`}>Pilih Paket {plan.name}</Button>
                 </CardFooter>
               </Card>
             ))}
           </div>
         </section>
 
-        {/* Feature Comparison Table */}
         <section id="feature-comparison" className="w-full max-w-6xl mx-auto mb-16 md:mb-24 overflow-x-auto">
           <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">Perbandingan Fitur Lengkap</h2>
           <div className="overflow-x-auto">
@@ -452,7 +432,6 @@ export default function PricingPage() {
           </div>
         </section>
 
-        {/* How Subscription Works */}
         <section id="how-it-works" className="w-full max-w-4xl mx-auto mb-16 md:mb-24 text-center">
           <h2 className="text-3xl md:text-4xl font-bold mb-12">Bagaimana Langganan Bekerja</h2>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
@@ -482,7 +461,6 @@ export default function PricingPage() {
           </div>
         </section>
 
-        {/* Why Choose Our Platform (Trust Section) */}
         <section id="why-choose-us" className="w-full max-w-6xl mx-auto mb-16 md:mb-24 text-center">
           <h2 className="text-3xl md:text-4xl font-bold mb-12">Mengapa Para Profesional Memilih Kami</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -500,7 +478,6 @@ export default function PricingPage() {
           </div>
         </section>
 
-        {/* Payment Methods */}
         <section id="payment-methods" className="w-full max-w-4xl mx-auto mb-16 md:mb-24 text-center">
           <h2 className="text-3xl md:text-4xl font-bold mb-8">Metode Pembayaran</h2>
           <div className="flex flex-wrap justify-center gap-6 mb-4">
@@ -516,7 +493,6 @@ export default function PricingPage() {
           </p>
         </section>
 
-        {/* Security & Privacy */}
         <section id="security-privacy" className="w-full max-w-4xl mx-auto mb-16 md:mb-24 text-center">
           <h2 className="text-3xl md:text-4xl font-bold mb-12">Keamanan & Privasi Data Anda</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -534,7 +510,6 @@ export default function PricingPage() {
           </div>
         </section>
 
-        {/* Refund Policy Summary */}
         <section id="refund-policy-summary" className="w-full max-w-3xl mx-auto mb-16 md:mb-24 p-6 bg-yellow-50 dark:bg-yellow-950 border border-yellow-200 dark:border-yellow-700 rounded-lg text-left">
           <h2 className="text-2xl font-bold mb-4">Ringkasan Kebijakan Pengembalian Dana</h2>
           <ul className="list-disc pl-5 text-gray-700 dark:text-gray-300 space-y-2">
@@ -545,22 +520,23 @@ export default function PricingPage() {
           </ul>
         </section>
 
-        {/* FAQ */}
         <section id="faq" className="w-full max-w-4xl mx-auto mb-16 md:mb-24">
           <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">Pertanyaan yang Sering Diajukan</h2>
-          <Accordion type="single" collapsible className="w-full">
+          <div className="w-full space-y-4">
             {faqItems.map((item, index) => (
-              <AccordionItem key={index} value={\`item-\${index + 1}\`}>
-                <AccordionTrigger className="text-lg font-semibold text-left" aria-controls={\`faq-content-\${index + 1}\`}>{item.question}</AccordionTrigger>
-                <AccordionContent id={\`faq-content-\${index + 1}\`} className="text-gray-700 dark:text-gray-300">
+              <details key={index} className="group border rounded-lg p-4 bg-white dark:bg-gray-800 shadow-sm">
+                <summary className="text-lg font-semibold cursor-pointer list-none flex justify-between items-center group-open:mb-4">
+                  {item.question}
+                  <span className="transition-transform group-open:rotate-180">▼</span>
+                </summary>
+                <div className="text-gray-700 dark:text-gray-300">
                   {item.answer}
-                </AccordionContent>
-              </AccordionItem>
+                </div>
+              </details>
             ))}
-          </Accordion>
+          </div>
         </section>
 
-        {/* Contact Section */}
         <section id="contact" className="w-full max-w-4xl mx-auto mb-16 md:mb-24 text-center bg-blue-50 dark:bg-blue-950 p-8 rounded-lg shadow-sm">
           <h2 className="text-3xl md:text-4xl font-bold mb-8">Hubungi Kami</h2>
           <p className="text-lg text-gray-700 dark:text-gray-300 mb-6">
@@ -572,7 +548,7 @@ export default function PricingPage() {
               <p className="text-gray-700 dark:text-gray-300">Email: <a href="mailto:support@seotoolkit.com" className="text-blue-600 dark:text-blue-400 hover:underline" aria-label="Kirim email ke dukungan pelanggan">support@seotoolkit.com</a></p>
               <p className="text-gray-700 dark:text-gray-300">Waktu Respon: Dalam 24 jam</p>
             </div>
-            <Separator orientation="vertical" className="hidden sm:block h-auto" />
+            <div className="hidden sm:block w-px bg-gray-200 dark:bg-gray-700 self-stretch" />
             <div>
               <h3 className="text-xl font-semibold mb-2">Pertanyaan Bisnis</h3>
               <p className="text-gray-700 dark:text-gray-300">Email: <a href="mailto:business@seotoolkit.com" className="text-blue-600 dark:text-blue-400 hover:underline" aria-label="Kirim email ke pertanyaan bisnis">business@seotoolkit.com</a></p>
@@ -584,7 +560,6 @@ export default function PricingPage() {
           </Button>
         </section>
 
-        {/* Legal Links (Footer - Simplified for this page, ideally a global component) */}
         <footer className="w-full max-w-6xl mx-auto text-center py-8 border-t border-gray-200 dark:border-gray-800 text-gray-600 dark:text-gray-400 text-sm">
           <nav aria-label="Tautan Hukum">
             <ul className="flex flex-wrap justify-center gap-x-6 gap-y-2 mb-4">
@@ -603,12 +578,3 @@ export default function PricingPage() {
     </Fragment>
   );
 }
-
-// Sticky CTA for mobile (conceptual - requires client component for actual sticky behavior and responsiveness)
-// For a pure Server Component approach, sticky CTA would be a challenge without client-side JS.
-// A simpler approach for responsiveness is to have the CTA visible at the top/bottom depending on scroll,
-// but not strictly "sticky" in the CSS sense across all viewports without some JS or client component.
-// Given the "No unnecessary JS" constraint, I will omit a dynamic sticky CTA.
-// The primary CTAs are already prominent in the Hero and Pricing sections.
-// A fixed footer with a CTA could be an alternative for mobile, if strict "sticky" behavior is needed.
-// For now, the existing CTAs are considered sufficient and align with Server Component preference.
