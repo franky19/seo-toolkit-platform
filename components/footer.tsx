@@ -1,16 +1,6 @@
 import Link from "next/link";
 import { Newspaper, Rss } from "lucide-react";
 
-const tools = [
-  { href: "/tools/google-news-validator", label: "Google News Validator" },
-  { href: "/tools/google-news-checker", label: "Google News Checker" },
-  { href: "/tools/google-news-score", label: "Google News Score" },
-  { href: "/tools/google-discover-checker", label: "Discover Checker" },
-  { href: "/tools/chatgpt-citation-checker", label: "ChatGPT Citation Checker" },
-  { href: "/tools/perplexity-citation-checker", label: "Perplexity Citation Checker" },
-  { href: "/tools/ai-search-score", label: "AI Search Score" },
-];
-
 const productLinks = [
   { href: "/pricing", label: "Pricing" },
   { href: "/tools/google-news-validator", label: "Features" },
@@ -43,15 +33,6 @@ export default function Footer() {
             <p className="text-sm text-muted-foreground leading-relaxed mb-6">
               Optimize your articles for Google News, Google Discover, and AI search engines like ChatGPT, Gemini, and Perplexity.
             </p>
-            <div className="flex items-center gap-3">
-              <a href="https://x.com" target="_blank" rel="noopener noreferrer" className="w-8 h-8 rounded-lg bg-accent hover:bg-accent/80 flex items-center justify-center transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring" aria-label="Follow us on X (formerly Twitter)">
-                <span className="sr-only">X (Twitter)</span>
-                <svg className="w-4 h-4 text-muted-foreground" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" /></svg>
-              </a>
-              <a href="/rss.xml" className="w-8 h-8 rounded-lg bg-accent hover:bg-accent/80 flex items-center justify-center transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring" aria-label="RSS Feed">
-                <Rss className="w-4 h-4 text-muted-foreground" aria-hidden="true" />
-              </a>
-            </div>
           </div>
 
           <nav aria-label="Company">
@@ -96,8 +77,6 @@ export default function Footer() {
           </div>
         </div>
       </div>
-
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({ "@context": "https://schema.org", "@type": "Organization", name: "SEO Toolkit Platform", url: "https://seo-toolkit-platform.vercel.app", description: "SEO Toolkit Platform helps businesses and marketers improve visibility with modern SEO tools.", }) }} />
     </footer>
   );
 }

@@ -167,7 +167,7 @@ export default function HeroAnalyzer() {
                   onClick={handleAudit}
                   disabled={loading}
                   aria-label={loading ? "Analyzing article..." : "Analyze Free"}
-                    className="inline-flex h-12 min-w-36 items-center justify-center gap-2 rounded-xl bg-primary px-5 text-sm font-bold text-primary-foreground transition-all hover:-translate-y-0.5 hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                  className="inline-flex h-12 min-w-36 items-center justify-center gap-2 rounded-xl bg-primary px-5 text-sm font-bold text-primary-foreground transition-all hover:-translate-y-0.5 hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
                 >
                   {loading ? <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" /> : <Zap className="h-4 w-4" aria-hidden="true" />}
                   {loading ? "Analyzing" : "Analyze Free"}
@@ -201,27 +201,27 @@ export default function HeroAnalyzer() {
           <h2 className="text-2xl font-bold text-foreground sm:text-3xl">Live Example Report</h2>
           <p className="mt-3 max-w-3xl text-muted-foreground">A clear report format with score transparency, methodology context, and precise fixes.</p>
 
-            <div className="mt-8 rounded-3xl border border-border bg-card p-5 shadow-sm sm:p-6">
-              <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
-                {scores.map((score) => (
-                  <div key={score.label} className="rounded-xl border border-border bg-background/80 p-4 text-center shadow-sm">
-                  <p className="text-3xl font-black text-primary">{score.value}</p>
-                  <p className="mt-2 text-xs text-muted-foreground">{score.label}</p>
-                  <div
-                    className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-secondary"
-                    role="progressbar"
-                    aria-valuenow={score.value}
-                    aria-valuemin={0}
-                    aria-valuemax={100}
-                    aria-label={`${score.label}: ${score.value} out of 100`}
-                  >
+              <div className="mt-8 rounded-3xl border border-border bg-card p-5 shadow-sm sm:p-6">
+                <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+                  {scores.map((score) => (
+                    <div key={score.label} className="rounded-xl border border-border bg-background/80 p-4 text-center shadow-sm">
+                      <p className="text-3xl font-black text-primary">{score.value}</p>
+                      <p className="mt-2 text-xs text-muted-foreground">{score.label}</p>
                       <div
-                        className="h-full rounded-full bg-primary transition-all"
-                        style={{ width: `${score.value}%` }}
-                      />
-                  </div>
-                </div>
-              ))}
+                        className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-secondary"
+                        role="progressbar"
+                        aria-valuenow={score.value}
+                        aria-valuemin={0}
+                        aria-valuemax={100}
+                        aria-label={`${score.label}: ${score.value} out of 100`}
+                      >
+                        <div
+                          className="h-full rounded-full bg-primary transition-all"
+                          style={{ width: `${score.value}%` }}
+                        />
+                      </div>
+                    </div>
+                  ))}
             </div>
 
             <div className="mt-6 grid gap-4 lg:grid-cols-2">
