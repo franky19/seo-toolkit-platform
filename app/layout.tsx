@@ -1,8 +1,13 @@
+/** @format */
+
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import { ThemeProvider } from "@/components/theme-provider";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
+import Footer from "@/components/footer";
+import Navbar from "@/components/navbar";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -16,7 +21,8 @@ const siteUrl = "https://seo-toolkit-platform.vercel.app";
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "Google News SEO Toolkit – Free Google News Validator & Publisher SEO Audit",
+    default:
+      "Google News SEO Toolkit – Free Google News Validator & Publisher SEO Audit",
     template: "%s | Google News SEO Toolkit",
   },
   description:
@@ -44,7 +50,8 @@ export const metadata: Metadata = {
   creator: "Google News SEO Toolkit",
   publisher: "Google News SEO Toolkit",
   openGraph: {
-    title: "Google News SEO Toolkit – Free Google News Validator & Publisher SEO Audit",
+    title:
+      "Google News SEO Toolkit – Free Google News Validator & Publisher SEO Audit",
     description:
       "Validate your articles for Google News, Discover, Search, and AI Search Engines. Free analysis tool for publishers.",
     type: "website",
@@ -62,7 +69,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Google News SEO Toolkit – Free Google News Validator & Publisher SEO Audit",
+    title:
+      "Google News SEO Toolkit – Free Google News Validator & Publisher SEO Audit",
     description:
       "Validate your articles for Google News, Discover, Search, and AI Search Engines. Free analysis tool.",
     images: [`${siteUrl}/og-image.png`],
@@ -93,9 +101,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`dark ${inter.variable}`} suppressHydrationWarning>
+    <html lang="en" className={`${inter.variable}`} suppressHydrationWarning>
       <head>
-        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📰</text></svg>" />
+        <link
+          rel="icon"
+          href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📰</text></svg>"
+        />
         <link rel="preconnect" href="https://va.vercel-scripts.com" />
         <script
           type="application/ld+json"
@@ -123,10 +134,14 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className="font-sans antialiased bg-[#0a0a0a] text-white">
-        {children}
-        <Analytics />
-        <SpeedInsights />
+      <body className="font-sans antialiased bg-background text-foreground">
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          <Navbar />
+          {children}
+          <Footer />
+          <Analytics />
+          <SpeedInsights />
+        </ThemeProvider>
       </body>
     </html>
   );

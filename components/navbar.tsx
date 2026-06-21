@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Newspaper, Menu, X } from "lucide-react";
+import { ModeToggle } from "@/components/mode-toggle";
 
 const tools = [
   { href: "/tools/google-news-validator", label: "Google News Validator" },
@@ -46,39 +47,43 @@ export default function Navbar() {
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         scrolled
-          ? "bg-[#0a0a0a]/90 backdrop-blur-xl border-b border-white/5"
+          ? "bg-background/90 backdrop-blur-xl border-b border-border"
           : "bg-transparent"
       }`}
     >
       <nav aria-label="Main navigation" className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
         <Link href="/" aria-label="Google News SEO Toolkit - Home" className="flex items-center gap-2 shrink-0">
-          <div className="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center" aria-hidden="true">
-            <Newspaper className="w-4 h-4 text-white" />
+          <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center" aria-hidden="true">
+            <Newspaper className="w-4 h-4 text-primary-foreground" />
           </div>
-          <span className="font-semibold text-white text-sm">
+          <span className="font-semibold text-foreground text-sm">
             Google News SEO Toolkit
           </span>
         </Link>
 
         <div className="hidden md:flex items-center gap-1" role="menubar">
-          <Link href="/tools/google-news-validator" role="menuitem" className="px-3 py-2 text-sm text-white/70 hover:text-white rounded-md hover:bg-white/5 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300/40">
+          <Link href="/pricing" role="menuitem" className="px-3 py-2 text-sm text-muted-foreground hover:text-foreground rounded-md hover:bg-accent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+            Pricing
+          </Link>
+          <Link href="/tools/google-news-validator" role="menuitem" className="px-3 py-2 text-sm text-muted-foreground hover:text-foreground rounded-md hover:bg-accent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
             Tools
           </Link>
-          <Link href="/blog" role="menuitem" className="px-3 py-2 text-sm text-white/70 hover:text-white rounded-md hover:bg-white/5 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300/40">
+          <Link href="/blog" role="menuitem" className="px-3 py-2 text-sm text-muted-foreground hover:text-foreground rounded-md hover:bg-accent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
             Blog
           </Link>
         </div>
 
         <div className="hidden md:flex items-center gap-3">
+          <ModeToggle />
           <Link
             href="/#newsletter"
-            className="text-sm text-white/70 hover:text-white transition-colors px-3 py-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300/40"
+            className="text-sm text-muted-foreground hover:text-foreground transition-colors px-3 py-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           >
             Early Access
           </Link>
           <Link
             href="/#analyze"
-            className="text-sm bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2 rounded-lg font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400/60"
+            className="text-sm bg-primary hover:bg-primary/90 text-primary-foreground px-4 py-2 rounded-lg font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           >
             Analyze Free
           </Link>
@@ -86,7 +91,7 @@ export default function Navbar() {
 
         <button
           type="button"
-          className="md:hidden p-2 text-white/70 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300/40"
+          className="md:hidden p-2 text-muted-foreground hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           onClick={toggleMobile}
           aria-expanded={mobileOpen}
           aria-controls="mobile-menu"
@@ -97,10 +102,13 @@ export default function Navbar() {
       </nav>
 
       {mobileOpen && (
-        <div id="mobile-menu" className="md:hidden bg-[#0f0f0f] border-b border-white/5" role="menu">
+        <div id="mobile-menu" className="md:hidden bg-background border-b border-border" role="menu">
           <div className="px-4 py-4 space-y-1">
-            <div className="text-xs font-semibold text-white/40 uppercase tracking-wider px-3 py-2" id="mobile-tools-heading">
-              Tools
+            <div className="flex items-center justify-between mb-4">
+               <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider px-3 py-2" id="mobile-tools-heading">
+                Tools
+              </span>
+              <ModeToggle />
             </div>
             <ul role="menu" aria-labelledby="mobile-tools-heading">
               {tools.map((t) => (
@@ -108,15 +116,15 @@ export default function Navbar() {
                   <Link
                     href={t.href}
                     role="menuitem"
-                    className="block px-3 py-2.5 text-sm text-white/70 hover:text-white rounded-md hover:bg-white/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300/40"
+                    className="block px-3 py-2.5 text-sm text-muted-foreground hover:text-foreground rounded-md hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                   >
                     {t.label}
                   </Link>
                 </li>
               ))}
             </ul>
-            <div className="border-t border-white/5 pt-2 mt-2">
-              <div className="text-xs font-semibold text-white/40 uppercase tracking-wider px-3 py-2" id="mobile-blog-heading">
+            <div className="border-t border-border pt-2 mt-2">
+              <div className="text-xs font-semibold text-muted-foreground uppercase tracking-wider px-3 py-2" id="mobile-blog-heading">
                 Blog
               </div>
               <ul role="menu" aria-labelledby="mobile-blog-heading">
@@ -125,7 +133,7 @@ export default function Navbar() {
                     <Link
                       href={b.href}
                       role="menuitem"
-                      className="block px-3 py-2.5 text-sm text-white/70 hover:text-white rounded-md hover:bg-white/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300/40"
+                      className="block px-3 py-2.5 text-sm text-muted-foreground hover:text-foreground rounded-md hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                     >
                       {b.label}
                     </Link>
@@ -133,10 +141,10 @@ export default function Navbar() {
                 ))}
               </ul>
             </div>
-            <div className="border-t border-white/5 pt-3 mt-2">
+            <div className="border-t border-border pt-3 mt-2">
               <Link
                 href="/#analyze"
-                className="block w-full text-center text-sm bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2.5 rounded-lg font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400/60"
+                className="block w-full text-center text-sm bg-primary hover:bg-primary/90 text-primary-foreground px-4 py-2.5 rounded-lg font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               >
                 Analyze Free
               </Link>
