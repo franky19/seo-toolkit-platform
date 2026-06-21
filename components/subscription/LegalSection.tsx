@@ -17,7 +17,7 @@ export default function LegalSection() {
       <div className="w-full mx-auto px-4">
         <Accordion type="single" collapsible items={terms.map((item, i) => ({ value: `item-${i}`, title: item.title, children: item.content }))} />
         <div className="text-center pt-8">
-          <Link href="/terms" className="text-primary hover:underline font-semibold flex items-center justify-center gap-2">
+          <Link href="/terms-and-conditions" className="text-primary hover:underline font-semibold flex items-center justify-center gap-2">
             See All <span><ChevronRightIcon className="w-4 h-4" /></span>
           </Link>
         </div>

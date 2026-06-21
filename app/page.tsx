@@ -320,27 +320,26 @@ export default function Home() {
               <table className="w-full border-collapse text-left text-sm">
                 <thead>
                   <tr className="bg-muted text-muted-foreground">
-                    <th scope="col" className="px-4 py-3 font-semibold">
-                      Category
-                    </th>
-                    <th scope="col" className="px-4 py-3 font-semibold">
-                      Manual Audit
-                    </th>
-                    <th scope="col" className="px-4 py-3 font-semibold">
-                      Google News SEO Toolkit
-                    </th>
+                    <th scope="col" className="px-4 py-3 font-semibold">Category</th>
+                    <th scope="col" className="px-4 py-3 font-semibold">SEO Toolkit</th>
+                    <th scope="col" className="px-4 py-3 font-semibold">Typical Free SEO Tool</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {MANUAL_VS_TOOLKIT.map((row) => (
-                    <tr
-                      key={row[0]}
-                      className="border-t border-border text-foreground">
+                  {[
+                    ["No Login Required", "✅", "❌"],
+                    ["AI Recommendations", "✅", "❌"],
+                    ["Real-time Analysis", "✅", "⚠️"],
+                    ["Export PDF", "✅", "❌"],
+                    ["Dark Mode", "✅", "⚠️"],
+                    ["Mobile Friendly", "✅", "⚠️"],
+                    ["Accessibility Audit", "✅", "❌"],
+                    ["Core Web Vitals", "✅", "⚠️"],
+                  ].map((row) => (
+                    <tr key={row[0]} className="border-t border-border text-foreground">
                       <td className="px-4 py-3">{row[0]}</td>
-                      <td className="px-4 py-3 text-muted-foreground">
-                        {row[1]}
-                      </td>
-                      <td className="px-4 py-3 text-primary">{row[2]}</td>
+                      <td className="px-4 py-3 text-primary">{row[1]}</td>
+                      <td className="px-4 py-3 text-muted-foreground">{row[2]}</td>
                     </tr>
                   ))}
                 </tbody>

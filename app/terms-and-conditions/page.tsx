@@ -4,34 +4,40 @@ import Link from "next/link";
 const siteUrl = "https://seo-toolkit-platform.vercel.app";
 
 const faqItems = [
-  { q: "When can I cancel?", a: "You may cancel at any time according to your subscription terms." },
-  { q: "Do you provide refunds?", a: "Refunds are limited and subject to the refund policy." },
-  { q: "What law applies?", a: "These terms are governed by applicable laws in Indonesia, unless otherwise required." },
+  { q: "When can I cancel?", a: "You may cancel at any time before the next renewal date. Access continues until the current billing cycle ends." },
+  { q: "Do you provide refunds?", a: "Refunds are limited to eligible cases described in our Refund Policy." },
+  { q: "What law applies?", a: "These terms are governed by the laws of Indonesia." },
 ];
 
 export const metadata: Metadata = {
   title: "Terms & Conditions | SEO Toolkit Platform",
-  description: "Terms and Conditions for SEO Toolkit Platform, including subscriptions, billing, IP, liability, cancellation, and service availability.",
+  description: "Terms and Conditions for SEO Toolkit Platform covering subscriptions, billing, auto-renewal, payments, refunds, liability, and Indonesian law.",
   alternates: { canonical: `${siteUrl}/terms-and-conditions` },
   openGraph: { title: "Terms & Conditions | SEO Toolkit Platform", description: "Read the Terms and Conditions for SEO Toolkit Platform.", url: `${siteUrl}/terms-and-conditions`, type: "website" },
   twitter: { card: "summary_large_image", title: "Terms & Conditions | SEO Toolkit Platform", description: "Read the Terms and Conditions for SEO Toolkit Platform." },
 };
 
 const sections = [
-  ["Acceptance of Terms", "By accessing or using SEO Toolkit Platform, you agree to be bound by these terms."],
-  ["Description of Services", "We provide SEO analysis, reporting, optimization, and subscription-based software tools."],
-  ["User Responsibilities", "Users must provide accurate information and use the platform lawfully."],
-  ["Account Registration", "Accounts must be created with truthful information and kept secure."],
-  ["Subscription Terms", "Plans may be free or paid and may include monthly billing and renewal."],
-  ["Billing and Payments", "Payments are processed in IDR through secure third-party gateways."],
-  ["Cancellation Policy", "Users may cancel according to the plan terms; access continues until the billing cycle ends."],
-  ["Intellectual Property", "All software, branding, content, and design elements belong to SEO Toolkit Platform."],
-  ["Limitation of Liability", "We do not guarantee rankings, traffic, leads, conversions, or revenue."],
-  ["Prohibited Activities", "Illegal use, scraping, abuse, unauthorized access, and resale without permission are prohibited."],
-  ["Service Availability", "The service is provided as available, and temporary downtime may occur."],
-  ["Termination", "Accounts may be suspended or terminated for violations."],
-  ["Governing Law", "These terms are governed by applicable laws in Indonesia unless otherwise required."],
-  ["Contact Information", "For legal questions contact support@seo-toolkit-platform.com."],
+  ["Acceptance of Terms", "By accessing or using SEO Toolkit Platform, you agree to be bound by these Terms & Conditions and all related policies."],
+  ["Description of Services", "SEO Toolkit Platform is a subscription-based SaaS that provides SEO audits, keyword analysis, meta generation, schema tools, and related optimization features."],
+  ["User Eligibility", "You must be able to enter into a legally binding agreement under applicable law to use paid subscription services."],
+  ["Account Registration Requirements", "You must provide accurate, complete, and current information and keep your login credentials secure."],
+  ["User Responsibilities", "You are responsible for all activity conducted through your account and for ensuring your use complies with these Terms."],
+  ["Acceptable Use Policy", "You must not engage in illegal activities, account sharing, credential abuse, reverse engineering, unauthorized access, data scraping, subscription resale, service abuse, automated attacks, or circumvention of usage limits."],
+  ["Prohibited Activities", "Any activity that harms the platform, its users, security, availability, or integrity is prohibited."],
+  ["Subscription Plans", "We offer free and paid subscription plans with features and usage limits disclosed on the Pricing Page."],
+  ["Auto-Renewal Disclosure", "Subscriptions automatically renew at the end of each billing cycle unless cancelled before the renewal date. By subscribing, customers authorize recurring charges according to their selected subscription plan."],
+  ["Billing Terms", "All prices are displayed in Indonesian Rupiah (IDR). Billing is processed securely through Midtrans and other authorized providers. We do not store full card data on our servers. Invoices may be generated electronically after successful payment."],
+  ["Cancellation Rules", "You may cancel before the renewal date to avoid the next charge. Cancellation stops future billing but does not refund prior charges unless required by our Refund Policy."],
+  ["Refund Rules", "Payments are generally non-refundable except for eligible cases such as duplicate payment, billing error, or unauthorized transaction, as described in the Refund Policy."],
+  ["Intellectual Property Rights", "All software, branding, content, reports, and design elements remain the property of SEO Toolkit Platform or its licensors."],
+  ["Service Availability Disclaimer", "The service is provided as available and may be affected by scheduled maintenance, emergency maintenance, third-party interruptions, force majeure, updates, or modifications."],
+  ["SEO Performance Disclaimer", "We do not guarantee rankings, traffic increases, conversions, or revenue. Search engine algorithms may change at any time, and results depend on factors outside our control."],
+  ["Limitation of Liability", "To the maximum extent permitted by law, we are not liable for indirect, incidental, special, or consequential damages arising from use of the service."],
+  ["Fraud Prevention and Chargeback Handling", "We may review suspicious transactions, request verification, suspend access during review, and contest abusive chargebacks where appropriate."],
+  ["Suspension and Termination Rights", "We may suspend or terminate accounts for violations, non-payment, fraud, or abuse, with or without prior notice when required for security or legal compliance."],
+  ["Governing Law", "These Terms are governed by the laws of Indonesia, and disputes will be handled in accordance with applicable Indonesian jurisdiction requirements."],
+  ["Contact Information", "For legal, billing, or support questions, contact support@seo-toolkit-platform.com."],
 ];
 
 export default function TermsAndConditionsPage() {
@@ -44,7 +50,7 @@ export default function TermsAndConditionsPage() {
           <p className="text-muted-foreground mb-2">Last Updated: June 2026</p>
           <p className="text-lg text-muted-foreground mb-10 leading-relaxed">These Terms & Conditions govern your use of SEO Toolkit Platform and the subscription services we provide.</p>
 
-          <div className="rounded-3xl border border-border bg-card p-6 shadow-sm mb-10">
+          <div className="rounded-3xl border border-border bg-card p-6 shadow-sm mb-10 top-4">
             <h2 className="text-lg font-semibold mb-4">Table of Contents</h2>
             <ul className="grid gap-2 sm:grid-cols-2 text-sm text-muted-foreground">
               {sections.map(([title]) => <li key={title}><a href={`#${title.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`} className="hover:text-foreground">{title}</a></li>)}
