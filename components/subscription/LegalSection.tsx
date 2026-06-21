@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Accordion } from "@/components/ui/accordion";
+import { ChevronRightIcon } from "lucide-react";
 
 export default function LegalSection() {
   const terms = [
@@ -17,7 +18,7 @@ export default function LegalSection() {
         <Accordion type="single" collapsible items={terms.map((item, i) => ({ value: `item-${i}`, title: item.title, children: item.content }))} />
         <div className="text-center pt-8">
           <Link href="/terms" className="text-primary hover:underline font-semibold flex items-center justify-center gap-2">
-            Lihat Selengkapnya <span>→</span>
+            See All <span><ChevronRightIcon className="w-4 h-4" /></span>
           </Link>
         </div>
       </div>
