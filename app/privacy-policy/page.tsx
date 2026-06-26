@@ -69,12 +69,12 @@ export default function PrivacyPolicyPage() {
   return (
     <div className="min-h-screen bg-background text-foreground">
       <main className="px-4 py-16 sm:px-6">
-        <div className="mx-auto max-w-4xl">
+        <div className="mx-auto max-w-4xl">˜
           <nav className="text-sm text-muted-foreground mb-6"><Link href="/" className="hover:text-foreground">Home</Link> / <span aria-current="page">Privacy Policy</span></nav>
           <h1 className="text-4xl font-bold tracking-tight mb-3">Privacy Policy</h1>
           <p className="text-muted-foreground mb-2">Last Updated: June 2026</p>
           <p className="text-lg text-muted-foreground mb-10 leading-relaxed">This Privacy Policy explains how SEO Toolkit Platform collects, uses, stores, protects, and processes your information.</p>
-
+˜
           <div className="rounded-3xl border border-border bg-card p-6 shadow-sm mb-10 top-4">
             <h2 className="text-lg font-semibold mb-4">Table of Contents</h2>
             <ul className="grid gap-2 sm:grid-cols-2 text-sm text-muted-foreground">
