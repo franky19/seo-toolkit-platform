@@ -28,10 +28,12 @@ export default function ContactClient() {
             <section className="rounded-3xl border border-border bg-card p-6 shadow-sm">
               <h2 className="text-2xl font-semibold mb-4">Business Information</h2>
               <div className="space-y-3 text-sm text-muted-foreground">
-                <p><strong className="text-foreground">Business Name:</strong> SEO Toolkit Platform</p>
-                <p><strong className="text-foreground">Email Address:</strong> support@seo-toolkit-platform.com</p>
-                <p><strong className="text-foreground">Support Email:</strong> support@seo-toolkit-platform.com</p>
-                <p><strong className="text-foreground">Billing Email:</strong> billing@seo-toolkit-platform.com</p>
+                <p><strong className="text-foreground">Contact Person:</strong> SEO TOOLKIT PLATFORM</p>
+                <p><strong className="text-foreground">Business Type:</strong> Individual SEO Software Service</p>
+                <p><strong className="text-foreground">Contact Address:</strong> LK IV JLN GALANG, GG JATI, LUBUK PAKAM, CEMARA, DELI SERDANG</p>
+                <p><strong className="text-foreground">Phone Number:</strong> +62838-0214-7432</p>
+                <p><strong className="text-foreground">Support Email:</strong> admin@plugflow.my.id</p>
+                <p><strong className="text-foreground">Business Email:</strong> admin@plugflow.my.id</p>
                 <p><strong className="text-foreground">Operating Hours:</strong> Monday–Friday, 09:00–18:00 WIB</p>
                 <p><strong className="text-foreground">Response Time:</strong> Within 1 business day</p>
               </div>

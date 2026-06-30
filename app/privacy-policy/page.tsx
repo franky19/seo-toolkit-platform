@@ -59,7 +59,7 @@ const sections = [
   ["Data Retention and Storage", "We retain personal data only for as long as necessary to fulfill the purposes outlined in this policy, comply with legal obligations, resolve disputes, and enforce our agreements."],
   ["Data Security Measures", "We implement robust technical and organizational security measures designed to protect your personal data against unauthorized access, alteration, disclosure, or destruction."],
   ["Third-Party Services", "We may share your data with trusted third-party providers who assist us in operating our website, conducting business, or servicing you, but those parties agree to keep this information confidential."],
-  ["Payment Processing", "All payment information is handled by secure, compliant third-party payment processors. We do not store your full credit card details on our servers, ensuring higher security."],
+  ["Payment Processing", "All payment information is handled by secure, compliant third-party payment processors, such as Midtrans. We do not store your full credit card details on our servers, ensuring higher security."],
   ["User Data Rights", "Subject to applicable laws, you have the right to access, correct, delete, or restrict the processing of your personal data. You can also object to certain uses of your data."],
   ["GDPR and Indonesia PDP Law Compliance", "We are committed to adhering to global privacy standards, including GDPR principles and Indonesia's Law on Personal Data Protection (UU PDP) where applicable."],
   ["Contact Information for Privacy Inquiries", "For any questions or concerns regarding this Privacy Policy or your data, please contact us at support@seo-toolkit-platform.com."],

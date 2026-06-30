@@ -50,15 +50,15 @@ export default function AboutUsPage() {
           <section className="space-y-8 mb-10">
             <div>
               <h2 className="text-2xl font-semibold mb-3">Company Overview</h2>
-              <p className="text-muted-foreground leading-relaxed">SEO Toolkit adalah platform SEO all-in-one yang membantu bisnis, agensi, dan digital marketer meningkatkan visibilitas website melalui tools SEO modern.</p>
+              <p className="text-muted-foreground leading-relaxed">SEO Toolkit is an all-in-one SEO platform providing modern SEO tools to help businesses, agencies, and digital marketers increase their website visibility. It is operated as an individual venture by [Your Full Name].</p>
             </div>
             <div>
               <h2 className="text-2xl font-semibold mb-3">Mission</h2>
-              <p className="text-muted-foreground leading-relaxed">Membantu pengguna meningkatkan performa SEO dengan tools yang mudah digunakan.</p>
+              <p className="text-muted-foreground leading-relaxed">To empower users by enhancing their SEO performance through accessible and powerful tools.</p>
             </div>
             <div>
               <h2 className="text-2xl font-semibold mb-3">Vision</h2>
-              <p className="text-muted-foreground leading-relaxed">Menjadi platform SEO toolkit terpercaya untuk bisnis global.</p>
+              <p className="text-muted-foreground leading-relaxed">To be a trusted SEO toolkit platform for global businesses.</p>
             </div>
           </section>
 
