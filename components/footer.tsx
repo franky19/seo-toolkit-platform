@@ -10,6 +10,7 @@ const productLinks = [
 
 const companyLinks = [
   { href: "/about-us", label: "About Us" },
+  { href: "/why-us", label: "Why Us" },
   { href: "/contact", label: "Contact Us" },
   { href: "/privacy-policy", label: "Privacy Policy" },
   { href: "/terms-and-conditions", label: "Terms & Conditions" },

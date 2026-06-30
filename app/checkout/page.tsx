@@ -28,6 +28,11 @@ export default function CheckoutPage() {
           <input type="tel" required className="w-full p-2 border rounded" onChange={(e) => setFormData({...formData, phone: e.target.value})} />
         </div>
         <p className="text-sm text-yellow-600 italic">Pembayaran sedang dalam tahap integrasi. Permintaan langganan akan dicatat terlebih dahulu.</p>
+        <p className="text-sm text-gray-600">
+          By clicking &quot;Proceed to Payment&quot;, you agree to our{" "}
+          <a href="/terms-and-conditions" className="text-blue-600 underline" target="_blank">Terms & Conditions</a> and{" "}
+          <a href="/refund-policy" className="text-blue-600 underline" target="_blank">Refund Policy</a>.
+        </p>
         <button type="submit" className="w-full py-3 bg-blue-600 text-white rounded font-bold">Proceed to Payment</button>
       </form>
     </div>

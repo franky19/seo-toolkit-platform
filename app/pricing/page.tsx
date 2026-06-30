@@ -64,6 +64,9 @@ export default function PricingPage() {
         <div className="py-16">
           <h2 className="text-3xl font-bold text-center mb-10">Frequently Asked Questions</h2>
           <Accordion type="single" collapsible items={faqData.map((item, i) => ({ value: `item-${i}`, title: item.question, children: item.answer }))} />
+          <p className="mt-6 text-center text-sm text-muted-foreground bg-muted p-4 rounded-xl border border-border">
+            Payments are processed securely via Midtrans. After choosing your plan, you will be redirected to the secure Midtrans payment gateway to select your preferred method (Credit/Debit Card, E-Wallet, or Bank Transfer).
+          </p>
         </div>
 
         <LegalSection />

@@ -71,6 +71,9 @@ export default function Navbar() {
           <Link href="/blog" role="menuitem" className="px-3 py-2 text-sm text-muted-foreground hover:text-foreground rounded-md hover:bg-accent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
             Blog
           </Link>
+          <Link href="/why-us" role="menuitem" className="px-3 py-2 text-sm text-muted-foreground hover:text-foreground rounded-md hover:bg-accent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+            Why Us
+          </Link>
         </div>
 
         <div className="hidden md:flex items-center gap-3">

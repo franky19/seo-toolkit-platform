@@ -18,8 +18,8 @@ export const metadata: Metadata = {
 };
 
 const sections = [
-  ["Acceptance of Terms", "By accessing or using SEO Toolkit Platform, you agree to be bound by these Terms & Conditions and all related policies."],
-  ["Description of Services", "SEO Toolkit Platform is a subscription-based SaaS that provides SEO audits, keyword analysis, meta generation, schema tools, and related optimization features."],
+  ["Acceptance of Terms", "By accessing or using SEO Toolkit Platform, you agree to be bound by these Terms & Conditions and all related policies. SEO Toolkit Platform is operated as an individual venture by [Your Full Name]."],
+  ["Description of Services", "SEO Toolkit Platform is a subscription-based SaaS that provides SEO audits, keyword analysis, meta generation, schema tools, and related optimization features, operated by [Your Full Name] as an individual venture."],
   ["User Eligibility", "You must be able to enter into a legally binding agreement under applicable law to use paid subscription services."],
   ["Account Registration Requirements", "You must provide accurate, complete, and current information and keep your login credentials secure."],
   ["User Responsibilities", "You are responsible for all activity conducted through your account and for ensuring your use complies with these Terms."],
