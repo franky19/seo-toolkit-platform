@@ -4,7 +4,7 @@
 
 import * as React from "react";
 import { cn } from "@/lib/utils";
-import { ChevronDownIcon } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 
 type AccordionMode = "single" | "multiple";
 
@@ -97,7 +97,7 @@ export function Accordion(props: AccordionProps) {
                   }
                   className="flex w-full items-center justify-between gap-4 px-5 py-4 text-left text-sm font-medium text-foreground transition-colors hover:bg-accent/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-50">
                   <span>{item.title}</span>
-                  <ChevronDownIcon
+                  <ChevronDown
                     className={cn(
                       "h-4 w-4 transition-transform duration-300",
                       open && "rotate-180",
