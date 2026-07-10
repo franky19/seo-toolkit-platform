@@ -85,6 +85,12 @@ export default function Navbar() {
             Early Access
           </Link>
           <Link
+            href="/login"
+            className="text-sm text-muted-foreground hover:text-foreground transition-colors px-3 py-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          >
+            Login
+          </Link>
+          <Link
             href="/#analyze"
             className="text-sm bg-primary hover:bg-primary/90 text-primary-foreground px-4 py-2 rounded-lg font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           >
@@ -146,8 +152,14 @@ export default function Navbar() {
             </div>
             <div className="border-t border-border pt-3 mt-2">
               <Link
+                href="/login"
+                className="block px-3 py-2.5 text-sm text-muted-foreground hover:text-foreground rounded-md hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              >
+                Login
+              </Link>
+              <Link
                 href="/#analyze"
-                className="block w-full text-center text-sm bg-primary hover:bg-primary/90 text-primary-foreground px-4 py-2.5 rounded-lg font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                className="block w-full text-center text-sm bg-primary hover:bg-primary/90 text-primary-foreground px-4 py-2.5 rounded-lg font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring mt-2"
               >
                 Analyze Free
               </Link>
