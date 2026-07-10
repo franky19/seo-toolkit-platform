@@ -25,13 +25,13 @@ export default function LoginPage() {
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (email === "admin" && password === "admin123") {
+    if (email === "demo.midtrans@example.com" && password === "MidtransDemo2026!") {
       // Save fake session
       localStorage.setItem(
         "user",
         JSON.stringify({
-          username: "admin",
-          role: "admin",
+          username: "demo.midtrans@example.com",
+          role: ":MidtransDemo2026!",
           isLoggedIn: true,
         })
       );
@@ -83,7 +83,7 @@ export default function LoginPage() {
             )}
           </CardContent>
 
-          <CardFooter className="flex flex-col gap-4">
+          {/* <CardFooter className="flex flex-col gap-4">
             <Button type="submit" className="w-full">
               Sign in
             </Button>
@@ -99,7 +99,7 @@ export default function LoginPage() {
                 Password: admin123
               </span>
             </div>
-          </CardFooter>
+          </CardFooter> */}
         </form>
       </Card>
     </div>
