@@ -92,25 +92,56 @@ export function ModernContentForm() {
 /**
  * Modern Data Table
  */
-export function ModernDataTable() {
+export function FeaturesSection() {
   return (
-    <div className="rounded-xl border bg-card shadow-sm overflow-hidden">
-      <Table>
-        <TableHeader className="bg-muted/50">
-          <TableRow>
-            <TableHead>Metric</TableHead>
-            <TableHead>Value</TableHead>
-            <TableHead>Status</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          <TableRow>
-            <TableCell className="font-medium">Organic Traffic</TableCell>
-            <TableCell>12,400</TableCell>
-            <TableCell className="text-emerald-500">Optimized</TableCell>
-          </TableRow>
-        </TableBody>
-      </Table>
-    </div>
+    <section className="py-20 text-center">
+      <h2 className="text-3xl font-bold mb-12">Powerful Features</h2>
+      <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto px-4">
+        <div className="p-8 border rounded-xl bg-secondary">
+          <h3 className="text-xl font-semibold mb-2">Automated Audits</h3>
+          <p>Get real-time insights into your technical SEO health.</p>
+        </div>
+        <div className="p-8 border rounded-xl bg-secondary">
+          <h3 className="text-xl font-semibold mb-2">Keyword Intelligence</h3>
+          <p>Identify high-potential keywords to target.</p>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+export function WhyNotAppearingSection() {
+  return (
+    <section className="py-20 bg-card">
+      <div className="container mx-auto px-4">
+        <h2 className="text-3xl font-bold text-center mb-12">Why isn&apos;t my content appearing?</h2>
+        <div className="grid md:grid-cols-3 gap-8">
+          {[
+            { title: "Technical Issues", desc: "Crawl errors or indexing blocks." },
+            { title: "Low Relevancy", desc: "Content doesn't match search intent." },
+            { title: "Authority Gap", desc: "Lack of backlinks and domain trust." },
+          ].map((item, i) => (
+            <div key={i} className="p-6 border rounded-lg">
+              <h3 className="font-semibold mb-2">{item.title}</h3>
+              <p className="text-muted-foreground">{item.desc}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+export function HeroModern() {
+  return (
+    <section className="py-24 text-center bg-gradient-to-b from-background to-muted/20">
+      <h1 className="text-4xl font-extrabold tracking-tight sm:text-5xl lg:text-6xl mb-6">
+        SEO Toolkit Platform
+      </h1>
+      <p className="text-xl text-muted-foreground max-w-2xl mx-auto mb-8">
+        Analyze, optimize, and rank higher with our advanced SEO insights.
+      </p>
+      <Button size="lg">Get Started</Button>
+    </section>
   );
 }
