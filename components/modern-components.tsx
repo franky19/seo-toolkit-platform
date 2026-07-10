@@ -1,15 +1,17 @@
+/** @format */
+
 import React from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { 
-  Table, 
-  TableBody, 
-  TableCell, 
-  TableHead, 
-  TableHeader, 
-  TableRow 
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
 } from "@/components/ui/table";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useToast } from "@/hooks/use-toast";
@@ -18,7 +20,11 @@ import { Menu, User, FileText, Bell } from "lucide-react";
 /**
  * Modern UI Dashboard Shell component combining the requested imports
  */
-export function ModernDashboardShell({ children }: { children: React.ReactNode }) {
+export function ModernDashboardShell({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const { toast } = useToast();
 
   return (
@@ -37,9 +43,17 @@ export function ModernDashboardShell({ children }: { children: React.ReactNode }
               {/* Add mobile links here */}
             </SheetContent>
           </Sheet>
-          
+
           <div className="ml-auto flex items-center space-x-4">
-            <Button variant="ghost" size="icon" onClick={() => toast({ title: "Notifications", description: "No new updates." })}>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() =>
+                toast({
+                  title: "Notifications",
+                  description: "No new updates.",
+                })
+              }>
               <Bell className="h-5 w-5" />
             </Button>
             <Avatar className="h-8 w-8">
@@ -51,9 +65,7 @@ export function ModernDashboardShell({ children }: { children: React.ReactNode }
       </nav>
 
       {/* Main Content Area */}
-      <main className="container mx-auto py-8 px-4 md:px-8">
-        {children}
-      </main>
+      <main className="container mx-auto py-8 px-4 md:px-8">{children}</main>
     </div>
   );
 }
@@ -66,7 +78,11 @@ export function ModernContentForm() {
     <div className="space-y-4 p-6 border rounded-xl bg-card shadow-sm">
       <div className="space-y-2">
         <Label htmlFor="content-input">Generate Content</Label>
-        <Textarea id="content-input" placeholder="Type your ideas here..." className="min-h-[200px]" />
+        <Textarea
+          id="content-input"
+          placeholder="Type your ideas here..."
+          className="min-h-[200px]"
+        />
       </div>
       <Button>Generate Analysis</Button>
     </div>
@@ -76,14 +92,25 @@ export function ModernContentForm() {
 /**
  * Modern Data Table
  */
-export function FeaturesSection() {
-  return <section className="py-20 text-center">Features Placeholder</section>;
-}
-
-export function WhyNotAppearingSection() {
-  return <section className="py-20 text-center">Why Not Appearing Placeholder</section>;
-}
-
-export function HeroModern() {
-  return <section className="py-20 text-center">Hero Placeholder</section>;
+export function ModernDataTable() {
+  return (
+    <div className="rounded-xl border bg-card shadow-sm overflow-hidden">
+      <Table>
+        <TableHeader className="bg-muted/50">
+          <TableRow>
+            <TableHead>Metric</TableHead>
+            <TableHead>Value</TableHead>
+            <TableHead>Status</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          <TableRow>
+            <TableCell className="font-medium">Organic Traffic</TableCell>
+            <TableCell>12,400</TableCell>
+            <TableCell className="text-emerald-500">Optimized</TableCell>
+          </TableRow>
+        </TableBody>
+      </Table>
+    </div>
+  );
 }
