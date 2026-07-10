@@ -2,8 +2,7 @@
 
 import dynamic from "next/dynamic";
 import { Accordion } from "@/components/ui/accordion";
-import { HeroModern } from "@/components/sections/hero-modern";
-import { FeaturesSection, WhyNotAppearingSection } from "@/components/sections/features";
+import { HeroModern, FeaturesSection, WhyNotAppearingSection } from "@/components/modern-components";
 
 const NewsletterWrapper = dynamic(
   () => import("@/components/newsletter-wrapper"),

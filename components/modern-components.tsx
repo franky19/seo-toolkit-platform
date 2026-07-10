@@ -76,25 +76,14 @@ export function ModernContentForm() {
 /**
  * Modern Data Table
  */
-export function ModernDataTable() {
-  return (
-    <div className="rounded-xl border bg-card shadow-sm overflow-hidden">
-      <Table>
-        <TableHeader className="bg-muted/50">
-          <TableRow>
-            <TableHead>Metric</TableHead>
-            <TableHead>Value</TableHead>
-            <TableHead>Status</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          <TableRow>
-            <TableCell className="font-medium">Organic Traffic</TableCell>
-            <TableCell>12,400</TableCell>
-            <TableCell className="text-emerald-500">Optimized</TableCell>
-          </TableRow>
-        </TableBody>
-      </Table>
-    </div>
-  );
+export function FeaturesSection() {
+  return <section className="py-20 text-center">Features Placeholder</section>;
+}
+
+export function WhyNotAppearingSection() {
+  return <section className="py-20 text-center">Why Not Appearing Placeholder</section>;
+}
+
+export function HeroModern() {
+  return <section className="py-20 text-center">Hero Placeholder</section>;
 }

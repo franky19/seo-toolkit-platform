@@ -1,8 +1,6 @@
 /** @format */
 
 "use client";
-
-import DashboardLayout from "./layout";
 import {
   LineChart,
   Line,
