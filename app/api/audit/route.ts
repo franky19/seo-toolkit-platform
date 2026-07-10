@@ -167,7 +167,9 @@ export async function POST(request: NextRequest) {
     });
 
     // Generate audit report (without recommendations first)
-    const auditReportWithoutRecommendations = {
+    const auditReportWithoutRecommendations: Omit<AuditReport, 'recommendations'> = {
+      id: Math.floor(Math.random() * 1000000), // Simple ID generation
+      name: `Audit for ${finalUrl}`,
       url: finalUrl,
       timestamp: new Date().toISOString(),
       seoAudit,

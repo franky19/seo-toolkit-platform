@@ -11,10 +11,9 @@ import {
   getOrCreateAnonymousId,
   quotaLabel,
   readCachedQuota,
-  type QuotaInfo,
 } from "@/lib/quota-client";
 import { isValidUrl } from "@/lib/utils";
-import type { AuditReport, AuditStatus } from "@/types";
+import type { AuditReport, AuditStatus, QuotaInfo } from "@/types";
 
 function StatusIcon({ status }: Readonly<{ status: AuditStatus }>) {
   if (status === "PASS") return <CheckCircle2 className="h-4 w-4 text-green-500" aria-hidden="true" />;
@@ -241,7 +240,7 @@ export default function HeroAnalyzer() {
               <div className="rounded-xl border border-border bg-card p-4 shadow-sm">
                 <h3 className="font-semibold text-foreground">Actionable Recommendations</h3>
                 <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
-                  {(auditReport?.recommendations.slice(0, 4) ?? [
+                  {(auditReport?.recommendations?.slice(0, 4) ?? [
                     { title: "Add detailed author page links", action: "Link each byline to a credential-rich author page." },
                     { title: "Increase image resolution", action: "Use at least one 1200px-wide image for discover eligibility." },
                     { title: "Expand entity context", action: "Include named entities and factual references for llm optimization." },
