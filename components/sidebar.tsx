@@ -3,11 +3,11 @@ import { Search, FileText, Eye, Brain, Download, CreditCard, Settings, LayoutDas
 
 const items = [
   { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-  { href: '/keyword-research', label: 'Keyword Research', icon: Search },
-  { href: '/meta-generator', label: 'Meta Generator', icon: FileText },
-  { href: '/serp-preview', label: 'SERP Preview', icon: Eye },
-  { href: '/ai-content', label: 'AI Content Helper', icon: Brain },
-  { href: '/export-results', label: 'Export Results', icon: Download },
+  { href: '/dashboard/keyword-research', label: 'Keyword Research', icon: Search },
+  { href: '/dashboard/meta-generator', label: 'Meta Generator', icon: FileText },
+  { href: '/dashboard/serp-preview', label: 'SERP Preview', icon: Eye },
+  { href: '/dashboard/ai-content', label: 'AI Content Helper', icon: Brain },
+  { href: '/dashboard/export-results', label: 'Export Results', icon: Download },
   { href: '#', label: 'Billing', icon: CreditCard },
   { href: '#', label: 'Settings', icon: Settings },
 ];
