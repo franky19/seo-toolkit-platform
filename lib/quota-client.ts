@@ -1,7 +1,5 @@
 import { isQuotaInfo } from "@/lib/type-guards";
-import type { QuotaInfo } from "@/types";
-
-export type { QuotaInfo };
+import { QuotaInfo } from "@/types";
 
 const ANON_STORAGE_KEY = "gnst_anon_id";
 const QUOTA_CACHE_KEY = "gnst_quota_cache";
