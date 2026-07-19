@@ -2,7 +2,11 @@ import type { MetadataRoute } from "next";
 import { blogPosts } from "@/lib/blog-data";
 import { requestedBlogPosts } from "@/lib/blog-architecture";
 
-const baseUrl = "https://seo-toolkit-platform.vercel.app";
+#const baseUrl = "https://seo-toolkit-platform.vercel.app";
+const baseUrl =
+  process.env.NODE_ENV === "production"
+    ? "https://orfin-seo.plugflow.my.id"
+    : "https://seo-toolkit-platform.vercel.app/";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();
