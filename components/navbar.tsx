@@ -72,10 +72,7 @@ export default function Navbar() {
           href="/"
           aria-label="Google News SEO Toolkit - Home"
           className="flex items-center gap-2 shrink-0">
-          <div
-            className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center"
-            aria-hidden="true">
-            <Image
+           <Image
               src="/images/logo.png"
               alt="ORFIN SEO Logo"
               width={32}
@@ -83,7 +80,6 @@ export default function Navbar() {
               className="object-contain"
               priority
             />
-          </div>
           <span className="font-semibold text-foreground text-sm">
             ORFIN SEO
           </span>
