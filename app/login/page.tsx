@@ -83,23 +83,23 @@ export default function LoginPage() {
             )}
           </CardContent>
 
-          {/* <CardFooter className="flex flex-col gap-4">
+          <CardFooter className="flex flex-col gap-4">
             <Button type="submit" className="w-full">
               Sign in
             </Button>
 
-            <div className="text-center text-sm text-muted-foreground">
+            {/* <div className="text-center text-sm text-muted-foreground">
               Demo Login
               <br />
               <span className="font-medium">
-                Username: admin
+                Username: demo.midtrans@example.com
               </span>
               <br />
               <span className="font-medium">
-                Password: admin123
+                Password: MidtransDemo2026!
               </span>
-            </div>
-          </CardFooter> */}
+            </div> */}
+          </CardFooter>
         </form>
       </Card>
     </div>
