@@ -19,6 +19,7 @@ services:
       - "443:443"
     volumes:
       - ./nginx/orfin-seo.plugflow.my.id.conf:/etc/nginx/conf.d/default.conf:ro
+     # - ./nginx/ai.plugflow.my.id.conf:/etc/nginx/conf.d/default.conf:ro
       - ./certbot/conf:/etc/letsencrypt
       - ./certbot/www:/var/www/certbot
     restart: unless-stopped
